@@ -47,7 +47,6 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 
 	if strings.ToLower(code) != validCode {
 		response := responses.NewErrorfulResponse("The pupil code you have provided is incorrect If you do not have your pupil code, or have forgotten it, please contact your school. Your school contact details can usually be found on your school's website.")
-		response.SetExpired(false)
 		response.Write(w)
 		return
 	}
@@ -56,7 +55,6 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 
 	if dob != validDOB {
 		response := responses.NewErrorfulResponse("The date of birth you have provided is incorrect")
-		response.SetExpired(false)
 		response.Write(w)
 		return
 	}
@@ -71,4 +69,23 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 
 	response := responses.NewSuccessfulMetaResponse(data, meta)
 	response.Write(w)
+}
+
+func GetCodeHandler(w http.ResponseWriter, r *http.Request) {
+	dob := r.FormValue("date")
+
+	if dob != validDOB {
+		response := responses.NewErrorfulResponse("The date you provided is invalid.")
+		response.Write(w)
+		return
+	}
+
+	response := responses.NewSuccessfulResponse(map[string]interface{}{
+		"code": validCode,
+	})
+	response.Write(w)
+}
+
+func LogoutHandler(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusOK)
 }

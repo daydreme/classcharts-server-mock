@@ -16,8 +16,8 @@ type SuccesfulResponse[Data any, Meta any] struct {
 type ErrorfulResponse[Meta any] struct {
 	Success int    `json:"success"`
 	Error   string `json:"error"`
-	Expired *int   `json:"expired,omitempty"`
-	Meta    *Meta  `json:"meta,omitempty"`
+	Expired int    `json:"expired"`
+	Meta    Meta   `json:"meta"`
 }
 
 func NewSuccessfulMetaResponse[Data any, Meta any](data Data, meta Meta) SuccesfulResponse[Data, Meta] {
@@ -56,19 +56,7 @@ func (r ErrorfulResponse[Meta]) Write(w http.ResponseWriter) {
 	w.Write(jsonData)
 }
 
-func (r ErrorfulResponse[Meta]) SetExpired(expired bool) {
-	var setTo int
-
-	if expired {
-		setTo = 1
-	} else {
-		setTo = 0
-	}
-
-	r.Expired = &setTo
-}
-
-func NewErrorfulMetaResponse[Meta any](message string, meta *Meta) ErrorfulResponse[Meta] {
+func NewErrorfulMetaResponse[Meta any](message string, meta Meta) ErrorfulResponse[Meta] {
 	return ErrorfulResponse[Meta]{
 		Success: 0,
 		Error:   message,
@@ -76,9 +64,10 @@ func NewErrorfulMetaResponse[Meta any](message string, meta *Meta) ErrorfulRespo
 	}
 }
 
-func NewErrorfulResponse(message string) ErrorfulResponse[any] {
-	return ErrorfulResponse[any]{
+func NewErrorfulResponse(message string) ErrorfulResponse[[]any] {
+	return ErrorfulResponse[[]any]{
 		Success: 0,
 		Error:   message,
+		Meta:    []any{},
 	}
 }

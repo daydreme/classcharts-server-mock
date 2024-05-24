@@ -14,6 +14,8 @@ func CreateMuxRouter() *mux.Router {
 	r.HandleFunc("/apiv2student/hasdob", handlers.HasDOBHandler).Methods(http.MethodPost)
 	r.HandleFunc("/apiv2student/login", handlers.LoginHandler).Methods(http.MethodPost)
 	r.HandleFunc("/apiv2student/ping", handlers.UserHandler).Methods(http.MethodPost)
+	r.HandleFunc("/apiv2student/getcode", handlers.GetCodeHandler).Methods(http.MethodPost)
+	r.HandleFunc("/apiv2student/logout", handlers.LogoutHandler).Methods(http.MethodPost)
 
 	return r
 }
