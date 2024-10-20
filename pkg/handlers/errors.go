@@ -2,9 +2,8 @@ package handlers
 
 import (
 	"fmt"
+	"github.com/daydreme/classcharts-server-mock/pkg/models/responses"
 	"net/http"
-
-	"github.com/daydreme/classcharts-server-mock/pkg/responses"
 )
 
 func ErrorHandler(next http.Handler) http.Handler {

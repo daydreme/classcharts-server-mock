@@ -1,0 +1,35 @@
+# Requests for IntelliJ, for easier testing! :D
+
+### HasDOB
+### Check if a student code requires a date of birth to log in.
+POST http://localhost:4000/apiv2student/hasdob
+Accept: application/json
+Content-Type: application/x-www-form-urlencoded
+
+code=test
+
+### Login
+### Login with a student code and date of birth.
+POST http://localhost:4000/apiv2student/login
+Accept: application/json
+Content-Type: application/x-www-form-urlencoded
+
+code=test
+    &dob=2010-01-01
+    &recaptcha-token=no-token-available
+
+### Get Code
+### Get the student code by DOB.
+POST http://localhost:4000/apiv2student/getcode
+Accept: application/json
+Content-Type: application/x-www-form-urlencoded
+
+date=2010-01-01
+
+### Ping
+### Ping the server to get potentially new session ID and check for updates.
+POST http://localhost:4000/apiv2student/ping
+Accept: application/json
+Content-Type: application/x-www-form-urlencoded
+
+include_data=true

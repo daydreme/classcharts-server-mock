@@ -1,4 +1,3 @@
-# classcharts-server-mock
-
+# ClassCharts Server Mock
 The ClassCharts Student API mocked in [Go](https://go.dev).
-This is built to test features in the Student Client, so daydreme iOS can achieve 100% compatibility.
+This was built for primarily for testing features in 3rd-party ClassCharts Student clients (e.g. daydreme iOS, ClassUncharted, etc.).

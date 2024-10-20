@@ -8,9 +8,9 @@ import (
 type Object = map[string]interface{}
 
 type SuccesfulResponse[Data any, Meta any] struct {
+	Success int  `json:"success"`
 	Data    Data `json:"data"`
 	Meta    Meta `json:"meta"`
-	Success int  `json:"success"`
 }
 
 type ErrorfulResponse[Meta any] struct {

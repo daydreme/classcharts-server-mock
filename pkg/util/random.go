@@ -1,0 +1,14 @@
+package util
+
+import (
+	"crypto/rand"
+	"math/big"
+)
+
+func RandomInt(min, max int) (int, error) {
+	n, err := rand.Int(rand.Reader, big.NewInt(int64(max-min+1)))
+	if err != nil {
+		return 0, err
+	}
+	return int(n.Int64()) + min, nil
+}

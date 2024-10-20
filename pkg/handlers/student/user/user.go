@@ -1,10 +1,9 @@
-package handlers
+package user
 
 import (
+	"github.com/daydreme/classcharts-server-mock/pkg/models/responses"
+	"github.com/daydreme/classcharts-server-mock/pkg/models/student"
 	"net/http"
-
-	"github.com/daydreme/classcharts-server-mock/pkg/models"
-	"github.com/daydreme/classcharts-server-mock/pkg/responses"
 )
 
 type UserResponseMeta struct {
@@ -15,7 +14,7 @@ type UserResponseMeta struct {
 const version = "20.0.1"
 const globalSessionId = "test"
 
-func UserHandler(w http.ResponseWriter, r *http.Request) {
+func StudentUserHandler(w http.ResponseWriter, r *http.Request) {
 	var sessionId *string
 
 	if r.FormValue("include_data") != "false" {
@@ -30,8 +29,8 @@ func UserHandler(w http.ResponseWriter, r *http.Request) {
 		SessionId: sessionId,
 	}
 
-	data := map[string]interface{}{
-		"user": models.NewMockUser(),
+	data := responses.Object{
+		"user": student.NewMockUser(),
 	}
 
 	response := responses.NewSuccessfulMetaResponse(data, meta)

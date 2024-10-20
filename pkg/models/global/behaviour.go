@@ -1,4 +1,4 @@
-package models
+package global
 
 import "time"
 
@@ -15,9 +15,9 @@ type Behaviour struct {
 	OtherNegative      []string       `json:"other_negative"`
 	OtherNegativeCount map[string]int `json:"other_negative_count"`
 
+	PositiveReasons    map[string]int `json:"positive_reasons"`
 	OtherPositive      []string       `json:"other_positive"`
 	OtherPositiveCount map[string]int `json:"other_positive_count"`
-	PositiveReasons    map[string]int `json:"positive_reasons"`
 
 	Timeline []BehaviourTimelineItem `json:"timeline"`
 }
@@ -28,11 +28,10 @@ func NewMockBehaviour() Behaviour {
 	now := time.Now()
 
 	return Behaviour{
-
 		NegativeReasons: map[string]int{
-			"Disruption":     3,
-			"Lateness":       2,
-			"Other negative": 5,
+			"Disruption":     -3,
+			"Lateness":       -2,
+			"Other negative": -5,
 		},
 		OtherNegative: []string{
 			"Unfinished assignment",
@@ -42,14 +41,7 @@ func NewMockBehaviour() Behaviour {
 			"Unfinished assignment": -3,
 			"Missing materials":     -1,
 		},
-		OtherPositive: []string{
-			"Perfect attendance",
-			"Excellent participation",
-		},
-		OtherPositiveCount: map[string]int{
-			"Perfect attendance":      4,
-			"Excellent participation": 3,
-		},
+
 		PositiveReasons: map[string]int{
 			"Homework completion":  5,
 			"Outstanding project":  2,
@@ -57,6 +49,14 @@ func NewMockBehaviour() Behaviour {
 			"Team collaboration":   4,
 			"Exceptional behavior": 7,
 			"Other positive":       3,
+		},
+		OtherPositive: []string{
+			"Perfect attendance",
+			"Excellent participation",
+		},
+		OtherPositiveCount: map[string]int{
+			"Perfect attendance":      4,
+			"Excellent participation": 3,
 		},
 
 		Timeline: []BehaviourTimelineItem{

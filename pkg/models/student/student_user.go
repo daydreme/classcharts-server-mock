@@ -1,4 +1,4 @@
-package models
+package student
 
 type User struct {
 	Id                           int     `json:"id"`
@@ -47,7 +47,7 @@ func NewMockUser() User {
 		Name:                         "John Doe",
 		FirstName:                    "John",
 		LastName:                     "Doe",
-		AvatarURL:                    "https://example.com/avatar.jpg",
+		AvatarURL:                    "https://via.placeholder.com/128",
 		DisplayBehaviour:             true,
 		DisplayParentBehaviour:       true,
 		DisplayHomework:              true,
