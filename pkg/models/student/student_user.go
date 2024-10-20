@@ -1,5 +1,7 @@
 package student
 
+import "github.com/daydreme/classcharts-server-mock/pkg/handlers/db"
+
 type User struct {
 	Id                           int     `json:"id"`
 	Name                         string  `json:"name"`
@@ -82,4 +84,14 @@ func NewMockUser() User {
 		HasNewSurvey:                 false,
 		SurveyId:                     nil,
 	}
+}
+
+func NewMockUserFromStudentDB(studentDB db.StudentDB) User {
+	user := NewMockUser()
+	user.Id = studentDB.Id
+	user.Name = studentDB.Name
+	user.FirstName = studentDB.FirstName
+	user.LastName = studentDB.LastName
+
+	return user
 }

@@ -1,6 +1,9 @@
 package parent
 
-import "github.com/daydreme/classcharts-server-mock/pkg/models/student"
+import (
+	"github.com/daydreme/classcharts-server-mock/pkg/handlers/db"
+	"github.com/daydreme/classcharts-server-mock/pkg/models/student"
+)
 
 type User struct {
 	Id              int    `json:"id"`
@@ -45,15 +48,13 @@ func NewMockUser() User {
 }
 
 func NewMockPupils() []Pupil {
-	user2 := student.NewMockUser()
-	user2.Id = 2
-	user2.Name = "Jeff Doo"
-	user2.FirstName = "Jeff"
-	user2.LastName = "Doo"
+	var pupils []Pupil
 
-	return []Pupil{
-		{
-			User: student.NewMockUser(),
+	students := db.GetStudents()
+
+	for _, studentDB := range students {
+		pupils = append(pupils, Pupil{
+			User: student.NewMockUserFromStudentDB(studentDB),
 
 			SchoolName: "Primmit Secondary School",
 			SchoolLogo: "https://via.placeholder.com/480",
@@ -74,29 +75,8 @@ func NewMockPupils() []Pupil {
 			HomeworkExcusedCount:      1,
 			HomeworkCompletedCount:    3,
 			HomeworkSubmittedCount:    4,
-		},
-		{
-			User: user2,
-
-			SchoolName: "Primmit Secondary School",
-			SchoolLogo: "https://via.placeholder.com/480",
-
-			Timezone: "Europe/London",
-
-			DisplayCovidTests:   true,
-			CanRecordCovidTests: true,
-
-			DetentionYesCount:      9,
-			DetentionNoCount:       4,
-			DetentionPendingCount:  3,
-			DetentionUpscaledCount: 1,
-
-			HomeworkTodoCount:         9,
-			HomeworkLateCount:         2,
-			HomeworkNotCompletedCount: 8,
-			HomeworkExcusedCount:      7,
-			HomeworkCompletedCount:    1,
-			HomeworkSubmittedCount:    3,
-		},
+		})
 	}
+
+	return pupils
 }

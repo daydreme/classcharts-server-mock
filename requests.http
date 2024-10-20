@@ -33,3 +33,14 @@ Accept: application/json
 Content-Type: application/x-www-form-urlencoded
 
 include_data=true
+
+### Create Test Student
+### Create a test student in the database.
+POST http://localhost:4000/test/newstudent
+Accept: application/json
+Content-Type: application/x-www-form-urlencoded
+
+name=Robert Smith
+    &first_name=Robert
+    &last_name=Smith
+    &code=TESTDEVLOL

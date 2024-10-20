@@ -2,14 +2,12 @@ package user
 
 import (
 	"fmt"
+	"github.com/daydreme/classcharts-server-mock/pkg/handlers/db"
 	"github.com/daydreme/classcharts-server-mock/pkg/models/responses"
 	"github.com/daydreme/classcharts-server-mock/pkg/models/student"
 	"net/http"
 	"strings"
 )
-
-const validCode = "test"
-const validDOB = "2010-01-01"
 
 type hasDOBResponse struct {
 	HasDOB bool `json:"has_dob"`
@@ -26,8 +24,17 @@ func HasDOBHandler(w http.ResponseWriter, r *http.Request) {
 	//	Success: 1,
 	//}
 
+	hasDOB := false
+	students := db.GetStudents()
+	for _, studentDB := range students {
+		if strings.ToLower(code) == strings.ToLower(studentDB.Code) {
+			hasDOB = true
+			break
+		}
+	}
+
 	response := responses.NewSuccessfulResponse(hasDOBResponse{
-		HasDOB: strings.ToLower(code) == validCode,
+		HasDOB: hasDOB,
 	})
 
 	response.Write(w)
@@ -36,8 +43,17 @@ func HasDOBHandler(w http.ResponseWriter, r *http.Request) {
 func CheckPupilCodeHandler(w http.ResponseWriter, r *http.Request) {
 	code := r.PathValue("code")
 
+	hasDOB := false
+	students := db.GetStudents()
+	for _, studentDB := range students {
+		if strings.ToLower(code) == strings.ToLower(studentDB.Code) {
+			hasDOB = true
+			break
+		}
+	}
+
 	response := responses.NewSuccessfulResponse(hasDOBResponse{
-		HasDOB: strings.ToLower(code) == validCode,
+		HasDOB: hasDOB,
 	})
 
 	response.Write(w)
@@ -45,6 +61,7 @@ func CheckPupilCodeHandler(w http.ResponseWriter, r *http.Request) {
 
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	code := r.FormValue("code")
+	dob := r.FormValue("dob")
 	// remember := r.FormValue("remember")
 	recaptchaToken := r.FormValue("recaptcha-token")
 
@@ -60,15 +77,29 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("\033[33mWarning: recaptchaToken will most likely be required in the future. Please make sure to request login with 'recaptchaToken=no-token-available'.\033[0m")
 	}
 
-	if strings.ToLower(code) != validCode {
+	students := db.GetStudents()
+	var filteredStudents []db.StudentDB
+	for _, studentDB := range students {
+		if strings.ToLower(code) == strings.ToLower(studentDB.Code) {
+			filteredStudents = append(filteredStudents, studentDB)
+		}
+	}
+
+	if len(filteredStudents) == 0 {
 		response := responses.NewErrorfulResponse("The pupil code you have provided is incorrect. If you do not have your pupil code, or have forgotten it, please contact your school. Your school contact details can usually be found on your school's website.")
 		response.Write(w)
 		return
 	}
 
-	dob := r.FormValue("dob")
+	validDOB := false
+	for _, studentDB := range filteredStudents {
+		if dob == studentDB.DOB {
+			validDOB = true
+			break
+		}
+	}
 
-	if dob != validDOB {
+	if !validDOB {
 		response := responses.NewErrorfulResponse("The date of birth you have provided is incorrect")
 		response.Write(w)
 		return
@@ -89,14 +120,25 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 func GetCodeHandler(w http.ResponseWriter, r *http.Request) {
 	dob := r.FormValue("date")
 
-	if dob != validDOB {
+	students := db.GetStudents()
+	var studentCode string
+	validDOB := false
+	for _, studentDB := range students {
+		if dob == studentDB.DOB {
+			validDOB = true
+			studentCode = studentDB.Code
+			break
+		}
+	}
+
+	if !validDOB {
 		response := responses.NewErrorfulResponse("The date you provided is invalid.")
 		response.Write(w)
 		return
 	}
 
 	response := responses.NewSuccessfulResponse(responses.Object{
-		"code": validCode,
+		"code": studentCode,
 	})
 	response.Write(w)
 }
