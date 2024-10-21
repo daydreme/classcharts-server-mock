@@ -20,8 +20,11 @@ func CreateMuxRouter() *mux.Router {
 	router.Use(global.RequestHandler)
 
 	CreateStudentRoutes(router.PathPrefix("/apiv2student").Subrouter(), true)
-	CreateParentRoutes(router.PathPrefix("/apiv2parent").Subrouter())
 	CreateStudentV1Routes(router.PathPrefix("/student").Subrouter())
+
+	CreateParentRoutes(router.PathPrefix("/apiv2parent").Subrouter())
+	//CreateParentReportAbsenceRoutes(router.PathPrefix("/apiv2parentreportabsence").Subrouter())
+
 	CreateTestRouter(router.PathPrefix("/test").Subrouter())
 
 	return router
@@ -40,6 +43,8 @@ func CreateStudentRoutes(v2student *mux.Router, includeExtras bool) *mux.Router 
 	v2student.HandleFunc("/activity/{studentId}", studentData.GetActivityHandler).Methods(http.MethodGet)
 
 	v2student.HandleFunc("/announcements/{studentId}", studentData.GetAnnouncementHandler).Methods(http.MethodGet)
+
+	v2student.HandleFunc("/addconcern", studentData.AddConcernHandler).Methods(http.MethodPost)
 
 	v2student.HandleFunc("/getacademicreports", studentData.ListAcademicReportsHandler).Methods(http.MethodGet)
 	v2student.HandleFunc("/getacademicreport/{id}", studentData.GetAcademicReportHandler).Methods(http.MethodGet)
@@ -69,6 +74,11 @@ func CreateParentRoutes(v2parent *mux.Router) *mux.Router {
 
 	return v2parent
 }
+
+//func CreateParentReportAbsenceRoutes(v2parentreportabs *mux.Router) *mux.Router {
+//	v2parentreportabs.HandleFunc("/getreportedabsences/{studentId}", parentData.ListReportedAbsencesHandler).Methods(http.MethodGet)
+//	return v2parentreportabs
+//}
 
 func CreateStudentV1Routes(v1student *mux.Router) *mux.Router {
 	v1student.HandleFunc("/checkpupilcode/{code}", studentUser.CheckPupilCodeHandler).Methods(http.MethodPost)

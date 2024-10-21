@@ -22,6 +22,8 @@ type StudentDB struct {
 
 	DOB  string
 	Code string
+
+	Concerns []string
 }
 
 func InitDB() {
@@ -80,6 +82,17 @@ func CreateStudent(student StudentDB) models.StudentUser {
 	}
 
 	return student.ToStudentUser()
+}
+
+func UpdateStudent(student StudentDB) {
+	filter := responses.Object{
+		"id": student.Id,
+	}
+
+	_, err := Students.ReplaceOne(context.TODO(), filter, student)
+	if err != nil {
+		panic(err)
+	}
 }
 
 func GetNextID() int {
