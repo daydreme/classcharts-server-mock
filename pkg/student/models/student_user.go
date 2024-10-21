@@ -49,7 +49,7 @@ func NewUser() StudentUser {
 		LastName:                     "Doe",
 		AvatarURL:                    "https://via.placeholder.com/128",
 		DisplayBehaviour:             true,
-		DisplayParentBehaviour:       true,
+		DisplayParentBehaviour:       false,
 		DisplayHomework:              true,
 		DisplayRewards:               true,
 		DisplayDetentions:            true,

@@ -6,7 +6,7 @@ import (
 	"net/http"
 )
 
-type UserResponseMeta struct {
+type userResponseMeta struct {
 	Version   *string `json:"version,omitempty"`
 	SessionId *string `json:"session_id,omitempty"`
 }
@@ -24,7 +24,7 @@ func StudentUserHandler(w http.ResponseWriter, r *http.Request) {
 
 	version := version
 
-	meta := UserResponseMeta{
+	meta := userResponseMeta{
 		Version:   &version,
 		SessionId: sessionId,
 	}
