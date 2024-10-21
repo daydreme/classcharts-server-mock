@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"github.com/daydreme/classcharts-server-mock/pkg/global"
 	"github.com/daydreme/classcharts-server-mock/pkg/global/models/responses"
+	"github.com/daydreme/classcharts-server-mock/pkg/util"
+	"github.com/gorilla/mux"
 	"net/http"
 	"strings"
 )
@@ -23,36 +25,29 @@ func HasDOBHandler(w http.ResponseWriter, r *http.Request) {
 	//	Success: 1,
 	//}
 
-	hasDOB := false
 	students := global.GetStudents()
-	for _, studentDB := range students {
-		if strings.ToLower(code) == strings.ToLower(studentDB.Code) {
-			hasDOB = true
-			break
-		}
-	}
+	students = util.Filter(students, func(student global.StudentDB) bool {
+		return strings.ToLower(code) == strings.ToLower(student.Code)
+	})
 
 	response := responses.NewSuccessfulResponse(hasDOBResponse{
-		HasDOB: hasDOB,
+		HasDOB: len(students) > 0,
 	})
 
 	response.Write(w)
 }
 
 func CheckPupilCodeHandler(w http.ResponseWriter, r *http.Request) {
-	code := r.PathValue("code")
+	vars := mux.Vars(r)
+	code := vars["code"]
 
-	hasDOB := false
 	students := global.GetStudents()
-	for _, studentDB := range students {
-		if strings.ToLower(code) == strings.ToLower(studentDB.Code) {
-			hasDOB = true
-			break
-		}
-	}
+	students = util.Filter(students, func(student global.StudentDB) bool {
+		return strings.ToLower(code) == strings.ToLower(student.Code)
+	})
 
 	response := responses.NewSuccessfulResponse(hasDOBResponse{
-		HasDOB: hasDOB,
+		HasDOB: len(students) > 0,
 	})
 
 	response.Write(w)
@@ -77,40 +72,33 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	students := global.GetStudents()
-	var filteredStudents []global.StudentDB
-	for _, studentDB := range students {
-		if strings.ToLower(code) == strings.ToLower(studentDB.Code) {
-			filteredStudents = append(filteredStudents, studentDB)
-		}
-	}
+	students = util.Filter(students, func(student global.StudentDB) bool {
+		return strings.ToLower(code) == strings.ToLower(student.Code)
+	})
 
-	if len(filteredStudents) == 0 {
+	if len(students) == 0 {
 		response := responses.NewErrorfulResponse("The pupil code you have provided is incorrect. If you do not have your pupil code, or have forgotten it, please contact your school. Your school contact details can usually be found on your school's website.")
 		response.Write(w)
 		return
 	}
 
-	validDOB := false
-	var student global.StudentDB
-	for _, studentDB := range filteredStudents {
-		if dob == studentDB.DOB {
-			student = studentDB
-			validDOB = true
-			break
-		}
-	}
+	students = util.Filter(students, func(student global.StudentDB) bool {
+		return strings.ToLower(dob) == strings.ToLower(student.DOB)
+	})
 
-	if !validDOB {
-		response := responses.NewErrorfulResponse("The date of birth you have provided is incorrect")
+	if len(students) == 0 {
+		response := responses.NewErrorfulResponse("The pupil code you have provided is incorrect. If you do not have your pupil code, or have forgotten it, please contact your school. Your school contact details can usually be found on your school's website.")
 		response.Write(w)
 		return
 	}
+
+	student := students[0]
 
 	// Not 100% parity here because we are returning the whole user object while CC only returns a subset for some reason
 	data := student.ToStudentUser()
 
 	globalSessionId := globalSessionId
-	meta := UserResponseMeta{
+	meta := userResponseMeta{
 		SessionId: &globalSessionId,
 	}
 
@@ -122,28 +110,16 @@ func GetCodeHandler(w http.ResponseWriter, r *http.Request) {
 	dob := r.FormValue("date")
 
 	students := global.GetStudents()
-	var studentCode string
-	validDOB := false
-	for _, studentDB := range students {
-		if dob == studentDB.DOB {
-			validDOB = true
-			studentCode = studentDB.Code
-			break
-		}
-	}
-
-	if !validDOB {
-		response := responses.NewErrorfulResponse("The date you provided is invalid.")
-		response.Write(w)
-		return
-	}
+	students = util.Filter(students, func(student global.StudentDB) bool {
+		return strings.ToLower(dob) == strings.ToLower(student.DOB)
+	})
 
 	response := responses.NewSuccessfulResponse(responses.Object{
-		"code": studentCode,
+		"code": students[0].Code,
 	})
 	response.Write(w)
 }
 
-func LogoutHandler(w http.ResponseWriter, r *http.Request) {
+func LogoutHandler(w http.ResponseWriter, _ *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }

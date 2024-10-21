@@ -1,10 +1,9 @@
-package handlers
+package data
 
 import (
+	"github.com/daydreme/classcharts-server-mock/pkg/global/models"
+	"github.com/daydreme/classcharts-server-mock/pkg/global/models/responses"
 	"net/http"
-
-	"github.com/daydreme/classcharts-server-mock/pkg/models"
-	"github.com/daydreme/classcharts-server-mock/pkg/responses"
 )
 
 type timeTableResponseData []models.Lesson
@@ -17,7 +16,7 @@ type timeTableResponseMeta struct {
 	EndTime        string          `json:"end_time"`
 }
 
-func TimetableHandler(w http.ResponseWriter, r *http.Request) {
+func TimetableHandler(w http.ResponseWriter, _ *http.Request) {
 	periods := models.NewMockPeriods()
 
 	meta := timeTableResponseMeta{

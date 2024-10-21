@@ -1,19 +1,17 @@
-package handlers
+package data
 
 import (
+	"github.com/daydreme/classcharts-server-mock/pkg/global/models"
 	"net/http"
 	"slices"
 	"strconv"
 
-	"github.com/daydreme/classcharts-server-mock/pkg/models"
-	"github.com/daydreme/classcharts-server-mock/pkg/responses"
+	"github.com/daydreme/classcharts-server-mock/pkg/global/models/responses"
 	"github.com/gorilla/mux"
 )
 
-type listAcademicReportsData = []models.PreviewAcademicReport
-
-func ListAcademicReportsHandler(w http.ResponseWriter, r *http.Request) {
-	data := listAcademicReportsData(models.NewMockPreviewAcademicReports())
+func ListAcademicReportsHandler(w http.ResponseWriter, _ *http.Request) {
+	data := models.NewMockPreviewAcademicReports()
 
 	response := responses.NewSuccessfulResponse(data)
 	response.Write(w)

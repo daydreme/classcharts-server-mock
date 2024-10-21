@@ -1,21 +1,19 @@
-package handlers
+package data
 
 import (
 	"fmt"
+	"github.com/daydreme/classcharts-server-mock/pkg/global/models"
+	"github.com/daydreme/classcharts-server-mock/pkg/global/models/responses"
 	"net/http"
 	"slices"
 	"strconv"
 	"time"
 
-	"github.com/daydreme/classcharts-server-mock/pkg/models"
-	"github.com/daydreme/classcharts-server-mock/pkg/responses"
 	"github.com/gorilla/mux"
 )
 
-type listOnReportCardsData = []models.PreviewOnReportCard
-
-func ListOnReportCardsHandler(w http.ResponseWriter, r *http.Request) {
-	data := listOnReportCardsData(models.NewMockPreviewOnReportCards())
+func ListOnReportCardsHandler(w http.ResponseWriter, _ *http.Request) {
+	data := models.NewMockPreviewOnReportCards()
 
 	response := responses.NewSuccessfulResponse(data)
 	response.Write(w)
@@ -78,7 +76,7 @@ type getOnReportCardTargetData struct {
 	Periods []models.OnReportCardTargetPeriod `json:"periods"`
 }
 
-func GetOnReportCardTargetHandler(w http.ResponseWriter, r *http.Request) {
+func GetOnReportCardTargetHandler(w http.ResponseWriter, _ *http.Request) {
 	allTargets := models.NewMockOnReportCardTargets()
 	allPeriods := models.NewMockOnReportCardTargetPeriods()
 

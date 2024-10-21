@@ -3,9 +3,9 @@ package router
 import (
 	"github.com/daydreme/classcharts-server-mock/pkg/global"
 	"github.com/daydreme/classcharts-server-mock/pkg/global/models/responses"
-	user2 "github.com/daydreme/classcharts-server-mock/pkg/parent/handlers/user"
-	"github.com/daydreme/classcharts-server-mock/pkg/student/handlers/data"
-	"github.com/daydreme/classcharts-server-mock/pkg/student/handlers/user"
+	parentUser "github.com/daydreme/classcharts-server-mock/pkg/parent/handlers/user"
+	studentData "github.com/daydreme/classcharts-server-mock/pkg/student/handlers/data"
+	studentUser "github.com/daydreme/classcharts-server-mock/pkg/student/handlers/user"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -21,9 +21,63 @@ func CreateMuxRouter() *mux.Router {
 
 	CreateStudentRoutes(router.PathPrefix("/apiv2student").Subrouter(), true)
 	CreateParentRoutes(router.PathPrefix("/apiv2parent").Subrouter())
+	CreateStudentV1Routes(router.PathPrefix("/student").Subrouter())
+	CreateTestRouter(router.PathPrefix("/test").Subrouter())
 
-	testRouter := router.PathPrefix("/test").Subrouter()
-	testRouter.HandleFunc("/newstudent", func(w http.ResponseWriter, r *http.Request) {
+	return router
+}
+
+func CreateStudentRoutes(v2student *mux.Router, includeExtras bool) *mux.Router {
+	if includeExtras {
+		v2student.HandleFunc("/hasdob", studentUser.HasDOBHandler).Methods(http.MethodPost)
+		v2student.HandleFunc("/login", studentUser.LoginHandler).Methods(http.MethodPost)
+		v2student.HandleFunc("/ping", studentUser.StudentUserHandler).Methods(http.MethodPost)
+		v2student.HandleFunc("/getcode", studentUser.GetCodeHandler).Methods(http.MethodPost)
+		v2student.HandleFunc("/logout", studentUser.LogoutHandler).Methods(http.MethodPost)
+	}
+
+	v2student.HandleFunc("/behaviour/{studentId}", studentData.GetBehaviourHandler).Methods(http.MethodGet)
+	v2student.HandleFunc("/activity/{studentId}", studentData.GetActivityHandler).Methods(http.MethodGet)
+
+	v2student.HandleFunc("/announcements/{studentId}", studentData.GetAnnouncementHandler).Methods(http.MethodGet)
+
+	v2student.HandleFunc("/getacademicreports", studentData.ListAcademicReportsHandler).Methods(http.MethodGet)
+	v2student.HandleFunc("/getacademicreport/{id}", studentData.GetAcademicReportHandler).Methods(http.MethodGet)
+
+	v2student.HandleFunc("/getpupilreportcards", studentData.ListOnReportCardsHandler).Methods(http.MethodPost)
+	v2student.HandleFunc("/getpupilreportcard/{id}", studentData.GetOnReportCardHandler).Methods(http.MethodGet)
+	v2student.HandleFunc("/getpupilreportcardsummarycomment/{id}", studentData.GetOnReportCardSummaryCommentHandler).Methods(http.MethodGet)
+	v2student.HandleFunc("/getpupilreportcardtarget/{id}", studentData.GetOnReportCardTargetHandler).Methods(http.MethodGet)
+
+	v2student.HandleFunc("/timetable/{studentId}", studentData.TimetableHandler).Methods(http.MethodGet)
+
+	v2student.HandleFunc("/rewards/{studentId}", studentData.GetRewardHandler).Methods(http.MethodGet)
+	v2student.HandleFunc("/purchase/{itemId}", studentData.GetPurchaseHandler).Methods(http.MethodPost)
+
+	return v2student
+}
+
+func CreateParentRoutes(v2parent *mux.Router) *mux.Router {
+	v2parent.HandleFunc("/login", parentUser.LoginHandler).Methods(http.MethodPost)
+	v2parent.HandleFunc("/ping", parentUser.ParentUserHandler).Methods(http.MethodPost)
+	v2parent.HandleFunc("/logout", parentUser.LogoutHandler).Methods(http.MethodPost)
+
+	v2parent.HandleFunc("/pupils", parentUser.GetPupilsHandler).Methods(http.MethodGet)
+	v2parent.HandleFunc("/announcements", studentData.GetAnnouncementHandler).Methods(http.MethodGet)
+
+	CreateStudentRoutes(v2parent, false) // Creates all the /apiv2parent/behaviour, /apiv2parent/activity, etc. routes
+
+	return v2parent
+}
+
+func CreateStudentV1Routes(v1student *mux.Router) *mux.Router {
+	v1student.HandleFunc("/checkpupilcode/{code}", studentUser.CheckPupilCodeHandler).Methods(http.MethodPost)
+
+	return v1student
+}
+
+func CreateTestRouter(router *mux.Router) *mux.Router {
+	router.HandleFunc("/newstudent", func(w http.ResponseWriter, r *http.Request) {
 		student := global.CreateStudent(global.StudentDB{
 			Id:        global.GetNextID(),
 			Name:      r.FormValue("name"),
@@ -38,40 +92,4 @@ func CreateMuxRouter() *mux.Router {
 	}).Methods(http.MethodPost)
 
 	return router
-}
-
-func CreateStudentRoutes(v2student *mux.Router, includeExtras bool) *mux.Router {
-	if includeExtras {
-		v2student.HandleFunc("/hasdob", user.HasDOBHandler).Methods(http.MethodPost)
-		v2student.HandleFunc("/login", user.LoginHandler).Methods(http.MethodPost)
-		v2student.HandleFunc("/ping", user.StudentUserHandler).Methods(http.MethodPost)
-		v2student.HandleFunc("/getcode", user.GetCodeHandler).Methods(http.MethodPost)
-		v2student.HandleFunc("/logout", user.LogoutHandler).Methods(http.MethodPost)
-	}
-
-	v2student.HandleFunc("/behaviour/{student}", data.GetBehaviourHandler).Methods(http.MethodGet)
-	v2student.HandleFunc("/activity/{student}", data.GetActivityHandler).Methods(http.MethodGet)
-	v2student.HandleFunc("/announcements/{student}", data.GetAnnouncementHandler).Methods(http.MethodGet)
-
-	v2student.HandleFunc("/rewards/{student}", data.GetRewardHandler).Methods(http.MethodGet)
-	v2student.HandleFunc("/purchase/{itemID}", data.GetPurchaseHandler).Methods(http.MethodPost)
-
-	return v2student
-}
-
-func CreateParentRoutes(v2parent *mux.Router) *mux.Router {
-	v2parent.HandleFunc("/login", user2.LoginHandler).Methods(http.MethodPost)
-	v2parent.HandleFunc("/ping", user2.ParentUserHandler).Methods(http.MethodPost)
-	v2parent.HandleFunc("/logout", user2.LogoutHandler).Methods(http.MethodPost)
-
-	v2parent.HandleFunc("/pupils", user2.GetPupilsHandler).Methods(http.MethodGet)
-	v2parent.HandleFunc("/announcements", data.GetAnnouncementHandler).Methods(http.MethodGet)
-
-	CreateStudentRoutes(v2parent, false) // Creates all the /apiv2parent/behaviour, /apiv2parent/activity, etc. routes
-
-	return v2parent
-}
-
-func CreateStudentV1Routes(v1student *mux.Router) *mux.Router {
-	return v1student
 }
