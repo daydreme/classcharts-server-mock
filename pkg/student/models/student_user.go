@@ -1,6 +1,8 @@
-package student
+package models
 
-import "github.com/daydreme/classcharts-server-mock/pkg/handlers/db"
+import (
+	"github.com/daydreme/classcharts-server-mock/pkg/global"
+)
 
 type User struct {
 	Id                           int     `json:"id"`
@@ -86,7 +88,7 @@ func NewMockUser() User {
 	}
 }
 
-func NewMockUserFromStudentDB(studentDB db.StudentDB) User {
+func NewMockUserFromStudentDB(studentDB global.StudentDB) User {
 	user := NewMockUser()
 	user.Id = studentDB.Id
 	user.Name = studentDB.Name

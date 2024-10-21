@@ -1,4 +1,4 @@
-package global
+package models
 
 import "time"
 
@@ -115,7 +115,7 @@ func NewMockActivities() []Activity {
 			TeacherName: stringPtr("Miss C Yite"),
 			RoomName:    stringPtr("X5"),
 
-			Note: stringPtr("Amazing participation from all students today. Well done."),
+			Note: stringPtr("Amazing participation from all student today. Well done."),
 
 			DetentionDate:     nil,
 			DetentionTime:     nil,

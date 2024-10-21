@@ -1,8 +1,8 @@
 package data
 
 import (
-	"github.com/daydreme/classcharts-server-mock/pkg/models/global"
-	"github.com/daydreme/classcharts-server-mock/pkg/models/responses"
+	"github.com/daydreme/classcharts-server-mock/pkg/global/models"
+	"github.com/daydreme/classcharts-server-mock/pkg/global/models/responses"
 	"net/http"
 	"time"
 )
@@ -20,7 +20,7 @@ func GetBehaviourHandler(w http.ResponseWriter, r *http.Request) {
 		StepSize:  "week",
 	}
 
-	data := global.NewMockBehaviour()
+	data := models.NewMockBehaviour()
 	response := responses.NewSuccessfulMetaResponse(data, meta)
 	response.Write(w)
 }

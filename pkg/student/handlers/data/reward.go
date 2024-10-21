@@ -1,8 +1,8 @@
 package data
 
 import (
-	"github.com/daydreme/classcharts-server-mock/pkg/models/global"
-	"github.com/daydreme/classcharts-server-mock/pkg/models/responses"
+	"github.com/daydreme/classcharts-server-mock/pkg/global/models"
+	"github.com/daydreme/classcharts-server-mock/pkg/global/models/responses"
 	"github.com/daydreme/classcharts-server-mock/pkg/util"
 	"net/http"
 )
@@ -13,17 +13,17 @@ func GetRewardHandler(w http.ResponseWriter, r *http.Request) {
 		panic(err)
 	}
 
-	meta := global.GetRewardMeta{
+	meta := models.GetRewardMeta{
 		PupilScoreBalance: score,
 	}
 
-	data := global.NewMockRewards(meta)
+	data := models.NewMockRewards(meta)
 	response := responses.NewSuccessfulMetaResponse(data, meta)
 	response.Write(w)
 }
 
 func GetPurchaseHandler(w http.ResponseWriter, r *http.Request) {
-	data := global.NewMockPurchased()
+	data := models.NewMockPurchased()
 	response := responses.NewSuccessfulResponse(data)
 	response.Write(w)
 }

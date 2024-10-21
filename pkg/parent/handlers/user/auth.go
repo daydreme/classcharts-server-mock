@@ -2,8 +2,8 @@ package user
 
 import (
 	"fmt"
-	"github.com/daydreme/classcharts-server-mock/pkg/models/parent"
-	"github.com/daydreme/classcharts-server-mock/pkg/models/responses"
+	"github.com/daydreme/classcharts-server-mock/pkg/global/models/responses"
+	"github.com/daydreme/classcharts-server-mock/pkg/parent/models"
 	"net/http"
 )
 
@@ -34,7 +34,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	data := parent.NewMockUser()
+	data := models.NewMockUser()
 
 	globalSessionId := globalSessionId
 	meta := UserResponseMeta{

@@ -1,8 +1,8 @@
 package data
 
 import (
-	"github.com/daydreme/classcharts-server-mock/pkg/models/global"
-	"github.com/daydreme/classcharts-server-mock/pkg/models/responses"
+	"github.com/daydreme/classcharts-server-mock/pkg/global/models"
+	"github.com/daydreme/classcharts-server-mock/pkg/global/models/responses"
 	"net/http"
 	"time"
 )
@@ -24,7 +24,7 @@ func GetActivityHandler(w http.ResponseWriter, r *http.Request) {
 		DetentionAliasUC: "Detention",
 	}
 
-	data := global.NewMockActivities()
+	data := models.NewMockActivities()
 	response := responses.NewSuccessfulMetaResponse(data, meta)
 	response.Write(w)
 }

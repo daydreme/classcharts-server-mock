@@ -2,9 +2,9 @@ package user
 
 import (
 	"fmt"
-	"github.com/daydreme/classcharts-server-mock/pkg/handlers/db"
-	"github.com/daydreme/classcharts-server-mock/pkg/models/responses"
-	"github.com/daydreme/classcharts-server-mock/pkg/models/student"
+	"github.com/daydreme/classcharts-server-mock/pkg/global"
+	"github.com/daydreme/classcharts-server-mock/pkg/global/models/responses"
+	"github.com/daydreme/classcharts-server-mock/pkg/student/models"
 	"net/http"
 	"strings"
 )
@@ -25,7 +25,7 @@ func HasDOBHandler(w http.ResponseWriter, r *http.Request) {
 	//}
 
 	hasDOB := false
-	students := db.GetStudents()
+	students := global.GetStudents()
 	for _, studentDB := range students {
 		if strings.ToLower(code) == strings.ToLower(studentDB.Code) {
 			hasDOB = true
@@ -44,7 +44,7 @@ func CheckPupilCodeHandler(w http.ResponseWriter, r *http.Request) {
 	code := r.PathValue("code")
 
 	hasDOB := false
-	students := db.GetStudents()
+	students := global.GetStudents()
 	for _, studentDB := range students {
 		if strings.ToLower(code) == strings.ToLower(studentDB.Code) {
 			hasDOB = true
@@ -77,8 +77,8 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("\033[33mWarning: recaptchaToken will most likely be required in the future. Please make sure to request login with 'recaptchaToken=no-token-available'.\033[0m")
 	}
 
-	students := db.GetStudents()
-	var filteredStudents []db.StudentDB
+	students := global.GetStudents()
+	var filteredStudents []global.StudentDB
 	for _, studentDB := range students {
 		if strings.ToLower(code) == strings.ToLower(studentDB.Code) {
 			filteredStudents = append(filteredStudents, studentDB)
@@ -106,7 +106,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Not 100% parity here because we are returning the whole user object while CC only returns a subset for some reason
-	data := student.NewMockUser()
+	data := models.NewMockUser()
 
 	globalSessionId := globalSessionId
 	meta := UserResponseMeta{
@@ -120,7 +120,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 func GetCodeHandler(w http.ResponseWriter, r *http.Request) {
 	dob := r.FormValue("date")
 
-	students := db.GetStudents()
+	students := global.GetStudents()
 	var studentCode string
 	validDOB := false
 	for _, studentDB := range students {

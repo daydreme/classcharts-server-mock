@@ -1,8 +1,8 @@
 package user
 
 import (
-	"github.com/daydreme/classcharts-server-mock/pkg/models/parent"
-	"github.com/daydreme/classcharts-server-mock/pkg/models/responses"
+	"github.com/daydreme/classcharts-server-mock/pkg/global/models/responses"
+	"github.com/daydreme/classcharts-server-mock/pkg/parent/models"
 	"net/http"
 )
 
@@ -25,7 +25,7 @@ func ParentUserHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	data := responses.Object{
-		"user": parent.NewMockUser(),
+		"user": models.NewMockUser(),
 	}
 
 	response := responses.NewSuccessfulMetaResponse(data, meta)
@@ -33,6 +33,6 @@ func ParentUserHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetPupilsHandler(w http.ResponseWriter, r *http.Request) {
-	response := responses.NewSuccessfulResponse(parent.NewMockPupils())
+	response := responses.NewSuccessfulResponse(models.NewMockPupils())
 	response.Write(w)
 }

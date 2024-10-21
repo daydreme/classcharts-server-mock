@@ -1,4 +1,4 @@
-package db
+package global
 
 import (
 	"database/sql"
@@ -15,7 +15,7 @@ func InitDB() {
 	}
 
 	// Create a table if it doesn't exist
-	createTableSQL := `CREATE TABLE IF NOT EXISTS students (
+	createTableSQL := `CREATE TABLE IF NOT EXISTS student (
         "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
         "name" TEXT,
         "first_name" TEXT,
@@ -33,7 +33,7 @@ func InitDB() {
 func GetStudentByID(id int) (StudentDB, error) {
 	var student StudentDB
 
-	row := DB.QueryRow("SELECT * FROM students WHERE id = ?", id)
+	row := DB.QueryRow("SELECT * FROM student WHERE id = ?", id)
 	err := row.Scan(&student.Id, &student.Name, &student.FirstName, &student.LastName, &student.DOB, &student.Code)
 	if err != nil {
 		return student, err
@@ -45,7 +45,7 @@ func GetStudentByID(id int) (StudentDB, error) {
 func GetStudents() []StudentDB {
 	var students []StudentDB
 
-	rows, err := DB.Query("SELECT * FROM students")
+	rows, err := DB.Query("SELECT * FROM student")
 	if err != nil {
 		panic(err)
 	}
@@ -64,7 +64,7 @@ func GetStudents() []StudentDB {
 }
 
 func CreateStudent(student StudentDB) {
-	_, err := DB.Exec("INSERT INTO students (name, first_name, last_name, dob, code) VALUES (?, ?, ?, ?, ?)", student.Name, student.FirstName, student.LastName, student.DOB, student.Code)
+	_, err := DB.Exec("INSERT INTO student (name, first_name, last_name, dob, code) VALUES (?, ?, ?, ?, ?)", student.Name, student.FirstName, student.LastName, student.DOB, student.Code)
 	if err != nil {
 		panic(err)
 	}

@@ -1,8 +1,8 @@
-package parent
+package models
 
 import (
-	"github.com/daydreme/classcharts-server-mock/pkg/handlers/db"
-	"github.com/daydreme/classcharts-server-mock/pkg/models/student"
+	"github.com/daydreme/classcharts-server-mock/pkg/global"
+	"github.com/daydreme/classcharts-server-mock/pkg/student/models"
 )
 
 type User struct {
@@ -14,7 +14,7 @@ type User struct {
 }
 
 type Pupil struct {
-	student.User
+	models.User
 
 	SchoolName string `json:"school_name"`
 	SchoolLogo string `json:"school_logo"`
@@ -50,11 +50,11 @@ func NewMockUser() User {
 func NewMockPupils() []Pupil {
 	var pupils []Pupil
 
-	students := db.GetStudents()
+	students := global.GetStudents()
 
 	for _, studentDB := range students {
 		pupils = append(pupils, Pupil{
-			User: student.NewMockUserFromStudentDB(studentDB),
+			User: models.NewMockUserFromStudentDB(studentDB),
 
 			SchoolName: "Primmit Secondary School",
 			SchoolLogo: "https://via.placeholder.com/480",

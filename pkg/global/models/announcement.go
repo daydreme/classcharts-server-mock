@@ -1,8 +1,8 @@
-package global
+package models
 
 import (
-	"github.com/daydreme/classcharts-server-mock/pkg/models/parent"
-	"github.com/daydreme/classcharts-server-mock/pkg/models/responses"
+	"github.com/daydreme/classcharts-server-mock/pkg/global/models/responses"
+	"github.com/daydreme/classcharts-server-mock/pkg/parent/models"
 	"io"
 	"os"
 	"path/filepath"
@@ -115,7 +115,7 @@ func NewMockAnnouncements() []Announcement {
 				95,
 				responses.Yes,
 				"I give my consent for my child to attend the trip.",
-				parent.NewMockUser().Name,
+				models.NewMockUser().Name,
 			},
 			PupilConsents: []PupilConsent{
 				{
@@ -129,7 +129,7 @@ func NewMockAnnouncements() []Announcement {
 						95,
 						responses.Yes,
 						"I give my consent for John to attend the trip.",
-						parent.NewMockUser().Name,
+						models.NewMockUser().Name,
 					},
 				},
 				{
@@ -143,7 +143,7 @@ func NewMockAnnouncements() []Announcement {
 						96,
 						responses.Yes,
 						"I give my consent for Jeff to attend the trip.",
-						parent.NewMockUser().Name,
+						models.NewMockUser().Name,
 					},
 				},
 			},

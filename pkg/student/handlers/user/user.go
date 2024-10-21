@@ -1,8 +1,8 @@
 package user
 
 import (
-	"github.com/daydreme/classcharts-server-mock/pkg/models/responses"
-	"github.com/daydreme/classcharts-server-mock/pkg/models/student"
+	"github.com/daydreme/classcharts-server-mock/pkg/global/models/responses"
+	"github.com/daydreme/classcharts-server-mock/pkg/student/models"
 	"net/http"
 )
 
@@ -30,7 +30,7 @@ func StudentUserHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	data := responses.Object{
-		"user": student.NewMockUser(),
+		"user": models.NewMockUser(),
 	}
 
 	response := responses.NewSuccessfulMetaResponse(data, meta)
