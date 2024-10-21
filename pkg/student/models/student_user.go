@@ -1,10 +1,6 @@
 package models
 
-import (
-	"github.com/daydreme/classcharts-server-mock/pkg/global"
-)
-
-type User struct {
+type StudentUser struct {
 	Id                           int     `json:"id"`
 	Name                         string  `json:"name"`
 	FirstName                    string  `json:"first_name"`
@@ -45,8 +41,8 @@ type User struct {
 	SurveyId                     *string `json:"survey_id"`
 }
 
-func NewMockUser() User {
-	return User{
+func NewUser() StudentUser {
+	return StudentUser{
 		Id:                           1,
 		Name:                         "John Doe",
 		FirstName:                    "John",
@@ -86,14 +82,4 @@ func NewMockUser() User {
 		HasNewSurvey:                 false,
 		SurveyId:                     nil,
 	}
-}
-
-func NewMockUserFromStudentDB(studentDB global.StudentDB) User {
-	user := NewMockUser()
-	user.Id = studentDB.Id
-	user.Name = studentDB.Name
-	user.FirstName = studentDB.FirstName
-	user.LastName = studentDB.LastName
-
-	return user
 }

@@ -14,7 +14,7 @@ type User struct {
 }
 
 type Pupil struct {
-	models.User
+	models.StudentUser
 
 	SchoolName string `json:"school_name"`
 	SchoolLogo string `json:"school_logo"`
@@ -48,13 +48,13 @@ func NewMockUser() User {
 }
 
 func NewMockPupils() []Pupil {
-	var pupils []Pupil
+	pupils := make([]Pupil, 0) // We do this so we can return [] in the JSON instead of null
 
 	students := global.GetStudents()
 
 	for _, studentDB := range students {
 		pupils = append(pupils, Pupil{
-			User: models.NewMockUserFromStudentDB(studentDB),
+			StudentUser: studentDB.ToStudentUser(),
 
 			SchoolName: "Primmit Secondary School",
 			SchoolLogo: "https://via.placeholder.com/480",

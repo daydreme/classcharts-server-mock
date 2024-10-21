@@ -58,23 +58,46 @@ type PupilConsent struct {
 }
 
 func TryReadAnnouncement(name string) string {
+	// Get the current working directory
 	cwd, err := os.Getwd()
 	if err != nil {
 		panic(err)
 	}
 
-	file, err := os.Open(filepath.Join(cwd, "pkg", "models", "global", "announcements", name+".html"))
-	if err != nil {
-		panic(err)
-	}
-	defer func(file *os.File) {
-		err := file.Close()
+	// Slice to store .html files
+	var htmlFiles []string
+
+	// Walk through all files and directories
+	err = filepath.Walk(cwd, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			panic(err)
 		}
-	}(file)
+		// Filter for .html files
+		if !info.IsDir() && filepath.Ext(info.Name()) == ".html" {
+			htmlFiles = append(htmlFiles, path)
+		}
+		return nil
+	})
+	if err != nil {
+		panic(err)
+	}
 
-	content, err := io.ReadAll(file)
+	// Open the file
+	finalFile := ""
+	for _, file := range htmlFiles {
+		if filepath.Base(file) == name+".html" {
+			finalFile = file
+			break
+		}
+	}
+
+	// Return the file content
+	fileOpen, err := os.Open(finalFile)
+	if err != nil {
+		panic(err)
+	}
+
+	content, err := io.ReadAll(fileOpen)
 	if err != nil {
 		panic(err)
 	}

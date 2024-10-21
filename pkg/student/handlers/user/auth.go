@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/daydreme/classcharts-server-mock/pkg/global"
 	"github.com/daydreme/classcharts-server-mock/pkg/global/models/responses"
-	"github.com/daydreme/classcharts-server-mock/pkg/student/models"
 	"net/http"
 	"strings"
 )
@@ -92,8 +91,10 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	validDOB := false
+	var student global.StudentDB
 	for _, studentDB := range filteredStudents {
 		if dob == studentDB.DOB {
+			student = studentDB
 			validDOB = true
 			break
 		}
@@ -106,7 +107,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Not 100% parity here because we are returning the whole user object while CC only returns a subset for some reason
-	data := models.NewMockUser()
+	data := student.ToStudentUser()
 
 	globalSessionId := globalSessionId
 	meta := UserResponseMeta{

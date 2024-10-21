@@ -30,7 +30,7 @@ func StudentUserHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	data := responses.Object{
-		"user": models.NewMockUser(),
+		"user": models.NewUser(),
 	}
 
 	response := responses.NewSuccessfulMetaResponse(data, meta)
