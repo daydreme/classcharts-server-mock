@@ -46,13 +46,10 @@ func CreateStudentRoutes(v2student *mux.Router, includeExtras bool) *mux.Router 
 	}
 
 	v2student.HandleFunc("/behaviour/{student}", data.GetBehaviourHandler).Methods(http.MethodGet)
-
 	v2student.HandleFunc("/activity/{student}", data.GetActivityHandler).Methods(http.MethodGet)
-
 	v2student.HandleFunc("/announcements/{student}", data.GetAnnouncementHandler).Methods(http.MethodGet)
 
 	v2student.HandleFunc("/rewards/{student}", data.GetRewardHandler).Methods(http.MethodGet)
-
 	v2student.HandleFunc("/purchase/{itemID}", data.GetPurchaseHandler).Methods(http.MethodPost)
 
 	return v2student
