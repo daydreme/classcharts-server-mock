@@ -49,7 +49,7 @@ func NewMockUser() User {
 		LastName:                     "Doe",
 		AvatarURL:                    "https://example.com/avatar.jpg",
 		DisplayBehaviour:             true,
-		DisplayParentBehaviour:       true,
+		DisplayParentBehaviour:       false,
 		DisplayHomework:              true,
 		DisplayRewards:               true,
 		DisplayDetentions:            true,

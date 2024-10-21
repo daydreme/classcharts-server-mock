@@ -63,7 +63,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	data := models.NewMockUser()
 
 	globalSessionId := globalSessionId
-	meta := UserResponseMeta{
+	meta := userResponseMeta{
 		SessionId: &globalSessionId,
 	}
 

@@ -7,7 +7,7 @@ import (
 	"github.com/daydreme/classcharts-server-mock/pkg/responses"
 )
 
-type UserResponseMeta struct {
+type userResponseMeta struct {
 	Version   *string `json:"version,omitempty"`
 	SessionId *string `json:"session_id,omitempty"`
 }
@@ -25,7 +25,7 @@ func UserHandler(w http.ResponseWriter, r *http.Request) {
 
 	version := version
 
-	meta := UserResponseMeta{
+	meta := userResponseMeta{
 		Version:   &version,
 		SessionId: sessionId,
 	}
