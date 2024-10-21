@@ -2,11 +2,13 @@ package global
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"github.com/daydreme/classcharts-server-mock/pkg/global/models/responses"
 	"github.com/daydreme/classcharts-server-mock/pkg/student/models"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
+	"time"
 )
 
 var DB *mongo.Database
@@ -23,7 +25,8 @@ type StudentDB struct {
 }
 
 func InitDB() {
-	clientOptions := options.Client().ApplyURI("mongodb://localhost:27017")
+	fmt.Println("Connecting to MongoDB...")
+	clientOptions := options.Client().ApplyURI("mongodb://localhost:27017").SetConnectTimeout(time.Second * 3)
 	client, err := mongo.Connect(context.TODO(), clientOptions)
 	if err != nil {
 		panic(err)
@@ -37,7 +40,7 @@ func InitDB() {
 	DB = client.Database("classcharts")
 	Students = DB.Collection("students")
 
-	fmt.Println("Connected to MongoDB!")
+	fmt.Println("Connected to MongoDB")
 }
 
 func GetStudentByID(id int) StudentDB {
@@ -70,11 +73,27 @@ func GetStudents() []StudentDB {
 	return students
 }
 
-func CreateStudent(student StudentDB) {
+func CreateStudent(student StudentDB) models.StudentUser {
 	_, err := DB.Collection("students").InsertOne(context.TODO(), student)
 	if err != nil {
 		panic(err)
 	}
+
+	return student.ToStudentUser()
+}
+
+func GetNextID() int {
+	var student StudentDB
+	opts := options.FindOne().SetSort(responses.Object{"id": -1})
+	err := Students.FindOne(context.TODO(), responses.Object{}, opts).Decode(&student)
+	if err != nil {
+		if errors.Is(err, mongo.ErrNoDocuments) {
+			return 1
+		}
+		panic(err)
+	}
+
+	return student.Id + 1
 }
 
 func (s StudentDB) ToStudentUser() models.StudentUser {

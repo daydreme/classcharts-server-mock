@@ -2,6 +2,7 @@ package router
 
 import (
 	"github.com/daydreme/classcharts-server-mock/pkg/global"
+	"github.com/daydreme/classcharts-server-mock/pkg/global/models/responses"
 	user2 "github.com/daydreme/classcharts-server-mock/pkg/parent/handlers/user"
 	"github.com/daydreme/classcharts-server-mock/pkg/student/handlers/data"
 	"github.com/daydreme/classcharts-server-mock/pkg/student/handlers/user"
@@ -23,14 +24,17 @@ func CreateMuxRouter() *mux.Router {
 
 	testRouter := router.PathPrefix("/test").Subrouter()
 	testRouter.HandleFunc("/newstudent", func(w http.ResponseWriter, r *http.Request) {
-		global.CreateStudent(global.StudentDB{
+		student := global.CreateStudent(global.StudentDB{
+			Id:        global.GetNextID(),
 			Name:      r.FormValue("name"),
 			FirstName: r.FormValue("first_name"),
 			LastName:  r.FormValue("last_name"),
 			DOB:       "2010-01-01",
 			Code:      r.FormValue("code"),
 		})
-		w.WriteHeader(http.StatusOK)
+
+		response := responses.NewSuccessfulResponse(student)
+		response.Write(w)
 	}).Methods(http.MethodPost)
 
 	return router
@@ -61,6 +65,7 @@ func CreateParentRoutes(v2parent *mux.Router) *mux.Router {
 	v2parent.HandleFunc("/logout", user2.LogoutHandler).Methods(http.MethodPost)
 
 	v2parent.HandleFunc("/pupils", user2.GetPupilsHandler).Methods(http.MethodGet)
+	v2parent.HandleFunc("/announcements", data.GetAnnouncementHandler).Methods(http.MethodGet)
 
 	CreateStudentRoutes(v2parent, false) // Creates all the /apiv2parent/behaviour, /apiv2parent/activity, etc. routes
 
