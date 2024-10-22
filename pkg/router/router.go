@@ -1,12 +1,13 @@
 package router
 
 import (
-	"github.com/daydreme/classcharts-server-mock/pkg/global"
-	"github.com/daydreme/classcharts-server-mock/pkg/global/models/responses"
-	parentUser "github.com/daydreme/classcharts-server-mock/pkg/parent/handlers/user"
-	studentData "github.com/daydreme/classcharts-server-mock/pkg/student/handlers/data"
-	studentUser "github.com/daydreme/classcharts-server-mock/pkg/student/handlers/user"
 	"net/http"
+
+	studentData "github.com/daydreme/classcharts-server-mock/pkg/student/data"
+	studentUser "github.com/daydreme/classcharts-server-mock/pkg/student/user"
+	"github.com/daydreme/classcharts-server-mock/pkg/test"
+
+	parentUser "github.com/daydreme/classcharts-server-mock/pkg/parent/user"
 
 	"github.com/gorilla/mux"
 )
@@ -16,8 +17,8 @@ func CreateMuxRouter() *mux.Router {
 	// Honestly, this is more of a preference thing. I don't think it's necessary to have this, but it's good to have it anyway. Some dev out there might forget that this doesn't use trailing slashes, and end up spending 2 hours debugging why their code isn't working.
 	// This is just a safety net to save some unobservant people :)
 	router := mux.NewRouter().StrictSlash(true)
-	router.Use(global.ErrorHandler)
-	router.Use(global.RequestHandler)
+	router.Use(ErrorHandler)
+	router.Use(RequestHandler)
 
 	CreateStudentRoutes(router.PathPrefix("/apiv2student").Subrouter(), true)
 	CreateStudentV1Routes(router.PathPrefix("/student").Subrouter())
@@ -87,19 +88,10 @@ func CreateStudentV1Routes(v1student *mux.Router) *mux.Router {
 }
 
 func CreateTestRouter(router *mux.Router) *mux.Router {
-	router.HandleFunc("/newstudent", func(w http.ResponseWriter, r *http.Request) {
-		student := global.CreateStudent(global.StudentDB{
-			Id:        global.GetNextID(),
-			Name:      r.FormValue("name"),
-			FirstName: r.FormValue("first_name"),
-			LastName:  r.FormValue("last_name"),
-			DOB:       "2010-01-01",
-			Code:      r.FormValue("code"),
-		})
+	router.HandleFunc("/newstudent", test.CreateStudentHandler).Methods(http.MethodPost)
+	router.HandleFunc("/getstudent", test.GetStudentHandler).Methods(http.MethodGet)
 
-		response := responses.NewSuccessfulResponse(student)
-		response.Write(w)
-	}).Methods(http.MethodPost)
+	router.HandleFunc("/newschool", test.CreateSchoolHandler).Methods(http.MethodPost)
 
 	return router
 }

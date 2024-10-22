@@ -1,10 +1,11 @@
 package data
 
 import (
-	"github.com/daydreme/classcharts-server-mock/pkg/global"
-	"github.com/daydreme/classcharts-server-mock/pkg/global/models/responses"
 	"net/http"
 	"strconv"
+
+	"github.com/CommunityCharts/CCModels/shared"
+	db "github.com/daydreme/classcharts-server-mock/pkg"
 )
 
 func AddConcernHandler(w http.ResponseWriter, r *http.Request) {
@@ -15,11 +16,11 @@ func AddConcernHandler(w http.ResponseWriter, r *http.Request) {
 
 	concern := r.FormValue("text")
 
-	student := global.GetStudentByID(studentId)
+	student := db.GetStudentByID(studentId)
 	student.Concerns = append(student.Concerns, concern)
 
-	global.UpdateStudent(student)
+	db.UpdateStudent(student)
 
-	response := responses.NewSuccessfulResponse(responses.Object{})
+	response := shared.NewSuccessfulResponse(shared.Object{})
 	response.Write(w)
 }

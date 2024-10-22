@@ -1,9 +1,10 @@
-package global
+package router
 
 import (
 	"fmt"
-	"github.com/daydreme/classcharts-server-mock/pkg/global/models/responses"
 	"net/http"
+
+	"github.com/CommunityCharts/CCModels/shared"
 )
 
 func RequestHandler(next http.Handler) http.Handler {
@@ -21,7 +22,7 @@ func ErrorHandler(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		defer func() {
 			if err := recover(); err != nil {
-				response := responses.NewErrorfulResponse(fmt.Sprintf("%v", err))
+				response := shared.NewErrorfulResponse(fmt.Sprintf("%v", err))
 
 				w.WriteHeader(http.StatusInternalServerError)
 				response.Write(w)

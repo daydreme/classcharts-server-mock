@@ -2,12 +2,14 @@ package user
 
 import (
 	"fmt"
-	"github.com/daydreme/classcharts-server-mock/pkg/global"
-	"github.com/daydreme/classcharts-server-mock/pkg/global/models/responses"
-	"github.com/daydreme/classcharts-server-mock/pkg/util"
-	"github.com/gorilla/mux"
 	"net/http"
 	"strings"
+
+	"github.com/CommunityCharts/CCModels/shared"
+	"github.com/CommunityCharts/CCModels/student"
+	db "github.com/daydreme/classcharts-server-mock/pkg"
+	"github.com/daydreme/classcharts-server-mock/pkg/util"
+	"github.com/gorilla/mux"
 )
 
 type hasDOBResponse struct {
@@ -25,12 +27,12 @@ func HasDOBHandler(w http.ResponseWriter, r *http.Request) {
 	//	Success: 1,
 	//}
 
-	students := global.GetStudents()
-	students = util.Filter(students, func(student global.StudentDB) bool {
+	students := db.GetStudents()
+	students = util.Filter(students, func(student student.DBStudentUser) bool {
 		return strings.ToLower(code) == strings.ToLower(student.Code)
 	})
 
-	response := responses.NewSuccessfulResponse(hasDOBResponse{
+	response := shared.NewSuccessfulResponse(hasDOBResponse{
 		HasDOB: len(students) > 0,
 	})
 
@@ -41,12 +43,12 @@ func CheckPupilCodeHandler(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	code := vars["code"]
 
-	students := global.GetStudents()
-	students = util.Filter(students, func(student global.StudentDB) bool {
+	students := db.GetStudents()
+	students = util.Filter(students, func(student student.DBStudentUser) bool {
 		return strings.ToLower(code) == strings.ToLower(student.Code)
 	})
 
-	response := responses.NewSuccessfulResponse(hasDOBResponse{
+	response := shared.NewSuccessfulResponse(hasDOBResponse{
 		HasDOB: len(students) > 0,
 	})
 
@@ -71,50 +73,51 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("\033[33mWarning: recaptchaToken will most likely be required in the future. Please make sure to request login with 'recaptchaToken=no-token-available'.\033[0m")
 	}
 
-	students := global.GetStudents()
-	students = util.Filter(students, func(student global.StudentDB) bool {
+	students := db.GetStudents()
+	students = util.Filter(students, func(student student.DBStudentUser) bool {
 		return strings.ToLower(code) == strings.ToLower(student.Code)
 	})
 
 	if len(students) == 0 {
-		response := responses.NewErrorfulResponse("The pupil code you have provided is incorrect. If you do not have your pupil code, or have forgotten it, please contact your school. Your school contact details can usually be found on your school's website.")
+		response := shared.NewErrorfulResponse("The pupil code you have provided is incorrect. If you do not have your pupil code, or have forgotten it, please contact your school. Your school contact details can usually be found on your school's website.")
 		response.Write(w)
 		return
 	}
 
-	students = util.Filter(students, func(student global.StudentDB) bool {
+	students = util.Filter(students, func(student student.DBStudentUser) bool {
 		return strings.ToLower(dob) == strings.ToLower(student.DOB)
 	})
 
 	if len(students) == 0 {
-		response := responses.NewErrorfulResponse("The pupil code you have provided is incorrect. If you do not have your pupil code, or have forgotten it, please contact your school. Your school contact details can usually be found on your school's website.")
+		response := shared.NewErrorfulResponse("The date you have provided is incorrect")
 		response.Write(w)
 		return
 	}
 
-	student := students[0]
+	st := students[0]
 
 	// Not 100% parity here because we are returning the whole user object while CC only returns a subset for some reason
-	data := student.ToStudentUser()
+	data := st.StudentUser
 
-	globalSessionId := globalSessionId
+	var sessionId *string
+	sessionId = db.GetStudentJWTForLogin(st)
 	meta := userResponseMeta{
-		SessionId: &globalSessionId,
+		SessionId: sessionId,
 	}
 
-	response := responses.NewSuccessfulMetaResponse(data, meta)
+	response := shared.NewSuccessfulMetaResponse(data, meta)
 	response.Write(w)
 }
 
 func GetCodeHandler(w http.ResponseWriter, r *http.Request) {
 	dob := r.FormValue("date")
 
-	students := global.GetStudents()
-	students = util.Filter(students, func(student global.StudentDB) bool {
+	students := db.GetStudents()
+	students = util.Filter(students, func(student student.DBStudentUser) bool {
 		return strings.ToLower(dob) == strings.ToLower(student.DOB)
 	})
 
-	response := responses.NewSuccessfulResponse(responses.Object{
+	response := shared.NewSuccessfulResponse(shared.Object{
 		"code": students[0].Code,
 	})
 	response.Write(w)

@@ -1,10 +1,10 @@
 package data
 
 import (
-	"github.com/daydreme/classcharts-server-mock/pkg/global/models"
-	"github.com/daydreme/classcharts-server-mock/pkg/global/models/responses"
 	"net/http"
 	"time"
+
+	"github.com/CommunityCharts/CCModels/shared"
 )
 
 type getActivityMeta struct {
@@ -15,7 +15,7 @@ type getActivityMeta struct {
 	DetentionAliasUC string `json:"detention_alias_uc"`
 }
 
-func GetActivityHandler(w http.ResponseWriter, r *http.Request) {
+func GetActivityHandler(w http.ResponseWriter, _ *http.Request) {
 	meta := getActivityMeta{
 		StartDate:        time.Now().Format(time.RFC3339),
 		EndDate:          time.Now().AddDate(0, 1, 0).Format(time.RFC3339),
@@ -24,7 +24,7 @@ func GetActivityHandler(w http.ResponseWriter, r *http.Request) {
 		DetentionAliasUC: "Detention",
 	}
 
-	data := models.NewMockActivities()
-	response := responses.NewSuccessfulMetaResponse(data, meta)
+	data := shared.NewMockActivities()
+	response := shared.NewSuccessfulMetaResponse(data, meta)
 	response.Write(w)
 }

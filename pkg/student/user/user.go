@@ -1,9 +1,10 @@
 package user
 
 import (
-	"github.com/daydreme/classcharts-server-mock/pkg/global/models/responses"
-	"github.com/daydreme/classcharts-server-mock/pkg/student/models"
 	"net/http"
+
+	"github.com/CommunityCharts/CCModels/shared"
+	"github.com/CommunityCharts/CCModels/student"
 )
 
 type userResponseMeta struct {
@@ -12,14 +13,11 @@ type userResponseMeta struct {
 }
 
 const version = "20.0.1"
-const globalSessionId = "test"
 
 func StudentUserHandler(w http.ResponseWriter, r *http.Request) {
 	var sessionId *string
 
 	if r.FormValue("include_data") != "false" {
-		globalSessionId := globalSessionId
-		sessionId = &globalSessionId
 	}
 
 	version := version
@@ -29,10 +27,10 @@ func StudentUserHandler(w http.ResponseWriter, r *http.Request) {
 		SessionId: sessionId,
 	}
 
-	data := responses.Object{
-		"user": models.NewUser(),
+	data := shared.Object{
+		"user": student.NewUser(1, "Johnny Kyle", "https://placehold.co/320"),
 	}
 
-	response := responses.NewSuccessfulMetaResponse(data, meta)
+	response := shared.NewSuccessfulMetaResponse(data, meta)
 	response.Write(w)
 }

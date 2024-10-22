@@ -2,10 +2,10 @@ package main
 
 import (
 	"fmt"
-	"github.com/daydreme/classcharts-server-mock/pkg/global"
 	"net/http"
 	"strconv"
 
+	db "github.com/daydreme/classcharts-server-mock/pkg"
 	"github.com/daydreme/classcharts-server-mock/pkg/router"
 	muxHandlers "github.com/gorilla/handlers"
 )
@@ -26,8 +26,11 @@ func main() {
 		Addr:    ":" + strconv.Itoa(PORT),
 	}
 
-	global.InitDB()
+	db.InitDB()
 
 	fmt.Printf("Binding to :%v\n", PORT)
-	srv.ListenAndServe()
+	err := srv.ListenAndServe()
+	if err != nil {
+		panic(err)
+	}
 }

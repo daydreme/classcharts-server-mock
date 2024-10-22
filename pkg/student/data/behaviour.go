@@ -1,10 +1,10 @@
 package data
 
 import (
-	"github.com/daydreme/classcharts-server-mock/pkg/global/models"
-	"github.com/daydreme/classcharts-server-mock/pkg/global/models/responses"
 	"net/http"
 	"time"
+
+	"github.com/CommunityCharts/CCModels/shared"
 )
 
 type getBehaviourMeta struct {
@@ -13,14 +13,14 @@ type getBehaviourMeta struct {
 	StepSize  string `json:"step_size"`
 }
 
-func GetBehaviourHandler(w http.ResponseWriter, r *http.Request) {
+func GetBehaviourHandler(w http.ResponseWriter, _ *http.Request) {
 	meta := getBehaviourMeta{
 		StartDate: time.Now().Format(time.RFC3339),
 		EndDate:   time.Now().AddDate(0, 1, 0).Format(time.RFC3339),
 		StepSize:  "week",
 	}
 
-	data := models.NewMockBehaviour()
-	response := responses.NewSuccessfulMetaResponse(data, meta)
+	data := shared.NewMockBehaviour()
+	response := shared.NewSuccessfulMetaResponse(data, meta)
 	response.Write(w)
 }

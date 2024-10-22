@@ -14,7 +14,7 @@ POST http://localhost:4000/apiv2student/login
 Accept: application/json
 Content-Type: application/x-www-form-urlencoded
 
-code=test
+code=TESTDEVLOL2
     &dob=2010-01-01
     &recaptcha-token=no-token-available
 
@@ -40,7 +40,23 @@ POST http://localhost:4000/test/newstudent
 Accept: application/json
 Content-Type: application/x-www-form-urlencoded
 
-name=Faran Hight
-    &first_name=Faran
-    &last_name=Hight
-    &code=TESTDEVLOL3
+name=Mistahhhh Birliiiinnggg!
+    &code=TESTDEVLOL2
+    &avatarUrl=https://google.com
+    &schoolId=1238
+
+### Get Test Student
+### Get a test student from the database.
+GET http://localhost:4000/test/getstudent?studentId=2
+Accept: application/json
+
+### Create Test School
+### Create a test student in the database.
+POST http://localhost:4000/test/newschool
+Accept: application/json
+Content-Type: application/x-www-form-urlencoded
+
+name=Faran Hight Primary
+    &logo=https://google2.com
+    &schoolId=1238
+

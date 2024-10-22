@@ -1,23 +1,23 @@
 package data
 
 import (
-	"github.com/daydreme/classcharts-server-mock/pkg/global/models"
-	"github.com/daydreme/classcharts-server-mock/pkg/global/models/responses"
 	"net/http"
+
+	"github.com/CommunityCharts/CCModels/shared"
 )
 
-type timeTableResponseData []models.Lesson
+type timeTableResponseData []shared.Lesson
 
 type timeTableResponseMeta struct {
 	Dates          []string        `json:"dates"`
 	TimetableDates []string        `json:"timetable_dates"`
-	Periods        []models.Period `json:"periods"`
+	Periods        []shared.Period `json:"periods"`
 	StartTime      string          `json:"start_time"`
 	EndTime        string          `json:"end_time"`
 }
 
 func TimetableHandler(w http.ResponseWriter, _ *http.Request) {
-	periods := models.NewMockPeriods()
+	periods := shared.NewMockPeriods()
 
 	meta := timeTableResponseMeta{
 		Dates:          []string{"2024-05-29", "2024-05-30"},
@@ -27,8 +27,8 @@ func TimetableHandler(w http.ResponseWriter, _ *http.Request) {
 		EndTime:        "14:00",
 	}
 
-	data := timeTableResponseData(models.NewMockLessons())
+	data := timeTableResponseData(shared.NewMockLessons())
 
-	response := responses.NewSuccessfulMetaResponse(data, meta)
+	response := shared.NewSuccessfulMetaResponse(data, meta)
 	response.Write(w)
 }

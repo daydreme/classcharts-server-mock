@@ -2,9 +2,10 @@ package user
 
 import (
 	"fmt"
-	"github.com/daydreme/classcharts-server-mock/pkg/global/models/responses"
-	"github.com/daydreme/classcharts-server-mock/pkg/parent/models"
 	"net/http"
+
+	"github.com/CommunityCharts/CCModels/parent"
+	"github.com/CommunityCharts/CCModels/shared"
 )
 
 const validEmail = "example"
@@ -29,22 +30,22 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if email != validEmail || password != validPassword {
-		response := responses.NewErrorfulResponse("Email address or password provided is incorrect")
+		response := shared.NewErrorfulResponse("Email address or password provided is incorrect")
 		response.Write(w)
 		return
 	}
 
-	data := models.NewMockUser()
+	data := parent.NewParentUser(1, "Jamie Doe", "james@example.com", "en", true)
 
 	globalSessionId := globalSessionId
 	meta := UserResponseMeta{
 		SessionId: &globalSessionId,
 	}
 
-	response := responses.NewSuccessfulMetaResponse(data, meta)
+	response := shared.NewSuccessfulMetaResponse(data, meta)
 	response.Write(w)
 }
 
-func LogoutHandler(w http.ResponseWriter, r *http.Request) {
+func LogoutHandler(w http.ResponseWriter, _ *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
