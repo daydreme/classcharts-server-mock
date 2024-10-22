@@ -97,7 +97,7 @@ func CreateStudent(student student.DBStudentUser) int {
 		panic(err)
 	}
 
-	return student.StudentUser.Id
+	return student.Id
 }
 
 func UpdateStudent(student student.DBStudentUser) {
