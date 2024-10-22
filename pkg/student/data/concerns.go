@@ -5,7 +5,7 @@ import (
 	"strconv"
 
 	"github.com/CommunityCharts/CCModels/shared"
-	db "github.com/daydreme/classcharts-server-mock/pkg"
+	"github.com/CommunityCharts/CCServerMock/pkg/db"
 )
 
 func AddConcernHandler(w http.ResponseWriter, r *http.Request) {

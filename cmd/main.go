@@ -5,8 +5,8 @@ import (
 	"net/http"
 	"strconv"
 
-	db "github.com/daydreme/classcharts-server-mock/pkg"
-	"github.com/daydreme/classcharts-server-mock/pkg/router"
+	"github.com/CommunityCharts/CCServerMock/pkg/db"
+	"github.com/CommunityCharts/CCServerMock/pkg/router"
 	muxHandlers "github.com/gorilla/handlers"
 )
 

@@ -2,23 +2,37 @@ package data
 
 import (
 	"net/http"
-	"strconv"
 
 	"github.com/CommunityCharts/CCModels/shared"
 	"github.com/CommunityCharts/CCModels/student"
+	"github.com/CommunityCharts/CCServerMock/pkg/db"
 )
 
-func GetAnnouncementHandler(w http.ResponseWriter, r *http.Request) {
-	s := strconv.Itoa(r.Context().Value("student").(student.DBStudentUser).Id)
-
-	data := []shared.Announcement{
-		{
-			Id:          1,
-			Title:       "Welcome to the new school year, student ID " + s,
-			Description: "We are excited to welcome all students back to school for the 2020-2021 school year. We have a lot of exciting things planned for this year, and we can't wait to get started!",
-		},
+func GetAnnouncementsHandler(w http.ResponseWriter, r *http.Request) {
+	sch, err := db.GetSchoolByID(r.Context().Value("student").(student.DBStudentUser).SchoolId)
+	if err != nil {
+		panic(err)
 	}
 
-	response := shared.NewSuccessfulResponse(data)
+	response := shared.NewSuccessfulResponse(sch.Announcements)
+	response.Write(w)
+}
+
+func CreateAnnouncementHandler(w http.ResponseWriter, r *http.Request) {
+	sch, err := db.GetSchoolByID(r.Context().Value("student").(student.DBStudentUser).SchoolId)
+	if err != nil {
+		panic(err)
+	}
+
+	db.MakeAnnouncement(
+		sch,
+		r.FormValue("title"),
+		r.FormValue("content"),
+		r.FormValue("teacher"),
+		shared.No,
+		shared.AnnouncementAttachment{},
+	)
+
+	response := shared.NewSuccessfulResponse(shared.Object{})
 	response.Write(w)
 }

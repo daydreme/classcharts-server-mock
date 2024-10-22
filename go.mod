@@ -1,4 +1,4 @@
-module github.com/daydreme/classcharts-server-mock
+module github.com/CommunityCharts/CCServerMock
 
 go 1.23.2
 

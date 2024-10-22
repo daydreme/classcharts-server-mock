@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/CommunityCharts/CCModels/shared"
-	"github.com/daydreme/classcharts-server-mock/pkg/util"
+	"github.com/CommunityCharts/CCServerMock/pkg/util"
 )
 
 func GetRewardHandler(w http.ResponseWriter, _ *http.Request) {

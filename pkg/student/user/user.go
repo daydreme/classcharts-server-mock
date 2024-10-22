@@ -5,7 +5,7 @@ import (
 
 	"github.com/CommunityCharts/CCModels/shared"
 	"github.com/CommunityCharts/CCModels/student"
-	db "github.com/daydreme/classcharts-server-mock/pkg"
+	"github.com/CommunityCharts/CCServerMock/pkg/db"
 )
 
 type userResponseMeta struct {

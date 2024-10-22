@@ -7,8 +7,8 @@ import (
 
 	"github.com/CommunityCharts/CCModels/shared"
 	"github.com/CommunityCharts/CCModels/student"
-	db "github.com/daydreme/classcharts-server-mock/pkg"
-	"github.com/daydreme/classcharts-server-mock/pkg/util"
+	"github.com/CommunityCharts/CCServerMock/pkg/db"
+	"github.com/CommunityCharts/CCServerMock/pkg/util"
 	"github.com/gorilla/mux"
 )
 

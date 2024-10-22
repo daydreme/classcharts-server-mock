@@ -53,3 +53,11 @@ Content-Type: application/x-www-form-urlencoded
 
 name=Faran Hight Primary&logo=https://google2.com&schoolId=1238
 
+### Create New Announcement in School of logged in user
+### Create a new announcement in the school of the logged in user.
+POST http://localhost:4000/test/newannouncement
+Accept: application/json
+Content-Type: application/x-www-form-urlencoded
+Authorization: Basic eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdHVkZW50X2lkIjoxLCJleHAiOjE3NDUzNTQ3MDJ9.mMmlqEroV-KJlgDyMTzGqIOOj2hWywX8w9I9O2my5nA 
+
+title=Welcome Back, Year 10!&content=Welcome back to school, Year 10!&teacher=Mr T Pott

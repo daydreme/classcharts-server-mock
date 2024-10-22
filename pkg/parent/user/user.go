@@ -38,6 +38,6 @@ func ParentUserHandler(w http.ResponseWriter, r *http.Request) {
 func GetPupilsHandler(w http.ResponseWriter, _ *http.Request) {
 	response := shared.NewSuccessfulResponse(parent.NewPupilsFromStudentsAndSchool([]student.StudentUser{
 		student.NewUser(1, "Jeremy Kyle", "https://placehold.co/340"),
-	}, school.NewSchool(1, "Test School", "en", []school.Class{})))
+	}, school.NewSchool(1, "Test School", "en")))
 	response.Write(w)
 }

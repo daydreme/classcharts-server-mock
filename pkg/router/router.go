@@ -3,11 +3,11 @@ package router
 import (
 	"net/http"
 
-	studentData "github.com/daydreme/classcharts-server-mock/pkg/student/data"
-	studentUser "github.com/daydreme/classcharts-server-mock/pkg/student/user"
-	"github.com/daydreme/classcharts-server-mock/pkg/test"
+	studentData "github.com/CommunityCharts/CCServerMock/pkg/student/data"
+	studentUser "github.com/CommunityCharts/CCServerMock/pkg/student/user"
+	"github.com/CommunityCharts/CCServerMock/pkg/test"
 
-	parentUser "github.com/daydreme/classcharts-server-mock/pkg/parent/user"
+	parentUser "github.com/CommunityCharts/CCServerMock/pkg/parent/user"
 
 	"github.com/gorilla/mux"
 )
@@ -46,7 +46,7 @@ func CreateStudentRoutes(v2student *mux.Router, includeExtras bool) *mux.Router 
 	restrictedv2Student.HandleFunc("/behaviour/{studentId}", studentData.GetBehaviourHandler).Methods(http.MethodGet)
 	restrictedv2Student.HandleFunc("/activity/{studentId}", studentData.GetActivityHandler).Methods(http.MethodGet)
 
-	restrictedv2Student.HandleFunc("/announcements/{studentId}", studentData.GetAnnouncementHandler).Methods(http.MethodGet)
+	restrictedv2Student.HandleFunc("/announcements/{studentId}", studentData.GetAnnouncementsHandler).Methods(http.MethodGet)
 
 	restrictedv2Student.HandleFunc("/addconcern", studentData.AddConcernHandler).Methods(http.MethodPost)
 
@@ -72,7 +72,7 @@ func CreateParentRoutes(v2parent *mux.Router) *mux.Router {
 	v2parent.HandleFunc("/logout", parentUser.LogoutHandler).Methods(http.MethodPost)
 
 	v2parent.HandleFunc("/pupils", parentUser.GetPupilsHandler).Methods(http.MethodGet)
-	v2parent.HandleFunc("/announcements", studentData.GetAnnouncementHandler).Methods(http.MethodGet)
+	v2parent.HandleFunc("/announcements", studentData.GetAnnouncementsHandler).Methods(http.MethodGet)
 
 	CreateStudentRoutes(v2parent, false) // Creates all the /apiv2parent/behaviour, /apiv2parent/activity, etc. routes
 
@@ -91,10 +91,15 @@ func CreateStudentV1Routes(v1student *mux.Router) *mux.Router {
 }
 
 func CreateTestRouter(router *mux.Router) *mux.Router {
+	restrictedTest := router.PathPrefix("").Subrouter()
+	restrictedTest.Use(AuthHandler)
+
 	router.HandleFunc("/newstudent", test.CreateStudentHandler).Methods(http.MethodPost)
 	router.HandleFunc("/getstudent", test.GetStudentHandler).Methods(http.MethodGet)
 
 	router.HandleFunc("/newschool", test.CreateSchoolHandler).Methods(http.MethodPost)
+
+	restrictedTest.HandleFunc("/newannouncement", studentData.CreateAnnouncementHandler).Methods(http.MethodPost)
 
 	return router
 }

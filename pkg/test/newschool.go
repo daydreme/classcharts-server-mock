@@ -6,7 +6,7 @@ import (
 
 	"github.com/CommunityCharts/CCModels/school"
 	"github.com/CommunityCharts/CCModels/shared"
-	db "github.com/daydreme/classcharts-server-mock/pkg"
+	"github.com/CommunityCharts/CCServerMock/pkg/db"
 )
 
 func CreateSchoolHandler(w http.ResponseWriter, r *http.Request) {
@@ -17,12 +17,7 @@ func CreateSchoolHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	db.CreateSchool(school.School{
-		Id: i,
-
-		Name: r.FormValue("name"),
-		Logo: r.FormValue("logo"),
-	})
+	db.CreateSchool(school.NewSchool(i, r.FormValue("name"), r.FormValue("logo")))
 
 	response := shared.NewSuccessfulResponse(shared.Object{})
 	response.Write(w)
