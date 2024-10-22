@@ -140,7 +140,7 @@ func GetNextID() int {
 		panic(err)
 	}
 
-	return dbStudentUser.Id + 1
+	return dbStudentUser.StudentUser.Id + 1
 }
 
 func CreateSchool(school school.School) {
