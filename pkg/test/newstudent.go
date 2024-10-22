@@ -8,6 +8,7 @@ import (
 	"github.com/CommunityCharts/CCModels/shared"
 	"github.com/CommunityCharts/CCModels/student"
 	db "github.com/daydreme/classcharts-server-mock/pkg"
+	"github.com/daydreme/classcharts-server-mock/pkg/util"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -34,7 +35,7 @@ func CreateStudentHandler(w http.ResponseWriter, r *http.Request) {
 		StudentUser: student.NewUser(db.GetNextID(), r.FormValue("name"), r.FormValue("avatarUrl")),
 		SchoolId:    school.Id,
 
-		DOB:  "2010-01-01",
+		DOB:  util.ToPtr("2010-01-01"),
 		Code: r.FormValue("code"),
 	})
 

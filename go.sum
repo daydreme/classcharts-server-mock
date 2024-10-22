@@ -1,5 +1,7 @@
 github.com/CommunityCharts/CCModels v0.0.0-20241022095108-72e6db91f70e h1:/alsn2+ZMoADdrBNWRNJGZDx1jjLFzIb6g19biru48c=
 github.com/CommunityCharts/CCModels v0.0.0-20241022095108-72e6db91f70e/go.mod h1:jbwy6BvsgBPE/4vs23bGwFBovIBF3Qzzl6bBtQmBJCk=
+github.com/CommunityCharts/CCModels v0.0.0-20241022163332-ae89baff7db1 h1:6AiNzSwz2HdjhKHVoXyjURflUUfKRJScAzHs6siE4Kw=
+github.com/CommunityCharts/CCModels v0.0.0-20241022163332-ae89baff7db1/go.mod h1:jbwy6BvsgBPE/4vs23bGwFBovIBF3Qzzl6bBtQmBJCk=
 github.com/felixge/httpsnoop v1.0.4 h1:NFTV2Zj1bL4mc9sqWACXbQFVBBg2W3GPvqp8/ESS2Wg=
 github.com/felixge/httpsnoop v1.0.4/go.mod h1:m8KPJKqk1gH5J9DgRY2ASl2lWCfGKXixSwevea8zH2U=
 github.com/golang-jwt/jwt v3.2.2+incompatible h1:IfV12K8xAKAnZqdXVzCZ+TOjboZ2keLg81eXfW3O+oY=
@@ -10,6 +12,8 @@ github.com/gorilla/handlers v1.5.2 h1:cLTUSsNkgcwhgRqvCNmdbRWG0A3N4F+M2nWKdScwyE
 github.com/gorilla/handlers v1.5.2/go.mod h1:dX+xVpaxdSw+q0Qek8SSsl3dfMk3jNddUkMzo0GtH0w=
 github.com/gorilla/mux v1.8.1 h1:TuBL49tXwgrFYWhqrNgrUNEY92u81SPhu7sTdzQEiWY=
 github.com/gorilla/mux v1.8.1/go.mod h1:AKf9I4AEqPTmMytcMc0KkNouC66V3BtZ4qD5fmWSiMQ=
+github.com/joho/godotenv v1.5.1 h1:7eLL/+HRGLY0ldzfGMeQkb7vMd0as4CfYvUVzLqw0N0=
+github.com/joho/godotenv v1.5.1/go.mod h1:f4LDr5Voq0i2e/R5DDNOoa2zzDfwtkZa6DnEwAbqwq4=
 github.com/klauspost/compress v1.13.6 h1:P76CopJELS0TiO2mebmnzgWaajssP/EszplttgQxcgc=
 github.com/klauspost/compress v1.13.6/go.mod h1:/3/Vjq9QcHkK5uEr5lBEmyoZ1iFhe47etQ6QUkpK6sk=
 github.com/klauspost/compress v1.17.11 h1:In6xLpyWOi1+C7tXUUWv2ot1QvBjxevKAaI6IXrJmUc=

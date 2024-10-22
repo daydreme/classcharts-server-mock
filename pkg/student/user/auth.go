@@ -29,7 +29,7 @@ func HasDOBHandler(w http.ResponseWriter, r *http.Request) {
 
 	students := db.GetStudents()
 	students = util.Filter(students, func(student student.DBStudentUser) bool {
-		return strings.ToLower(code) == strings.ToLower(student.Code)
+		return strings.ToLower(code) == strings.ToLower(student.Code) && student.DOB != nil
 	})
 
 	response := shared.NewSuccessfulResponse(hasDOBResponse{
@@ -85,7 +85,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	students = util.Filter(students, func(student student.DBStudentUser) bool {
-		return strings.ToLower(dob) == strings.ToLower(student.DOB)
+		return strings.ToLower(dob) == strings.ToLower(*student.DOB) || student.DOB == nil
 	})
 
 	if len(students) == 0 {
@@ -99,10 +99,8 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	// Not 100% parity here because we are returning the whole user object while CC only returns a subset for some reason
 	data := st.StudentUser
 
-	var sessionId *string
-	sessionId = db.GetStudentJWTForLogin(st)
 	meta := userResponseMeta{
-		SessionId: sessionId,
+		SessionId: db.GetStudentJWTForLogin(st),
 	}
 
 	response := shared.NewSuccessfulMetaResponse(data, meta)
@@ -114,7 +112,7 @@ func GetCodeHandler(w http.ResponseWriter, r *http.Request) {
 
 	students := db.GetStudents()
 	students = util.Filter(students, func(student student.DBStudentUser) bool {
-		return strings.ToLower(dob) == strings.ToLower(student.DOB)
+		return strings.ToLower(dob) == strings.ToLower(*student.DOB)
 	})
 
 	response := shared.NewSuccessfulResponse(shared.Object{

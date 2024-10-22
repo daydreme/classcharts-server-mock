@@ -32,33 +32,36 @@ func CreateMuxRouter() *mux.Router {
 }
 
 func CreateStudentRoutes(v2student *mux.Router, includeExtras bool) *mux.Router {
+	restrictedv2Student := v2student.PathPrefix("").Subrouter()
+	restrictedv2Student.Use(AuthHandler)
+
 	if includeExtras {
 		v2student.HandleFunc("/hasdob", studentUser.HasDOBHandler).Methods(http.MethodPost)
 		v2student.HandleFunc("/login", studentUser.LoginHandler).Methods(http.MethodPost)
-		v2student.HandleFunc("/ping", studentUser.StudentUserHandler).Methods(http.MethodPost)
-		v2student.HandleFunc("/getcode", studentUser.GetCodeHandler).Methods(http.MethodPost)
+		restrictedv2Student.HandleFunc("/ping", studentUser.StudentUserHandler).Methods(http.MethodPost)
+		restrictedv2Student.HandleFunc("/getcode", studentUser.GetCodeHandler).Methods(http.MethodPost)
 		v2student.HandleFunc("/logout", studentUser.LogoutHandler).Methods(http.MethodPost)
 	}
 
-	v2student.HandleFunc("/behaviour/{studentId}", studentData.GetBehaviourHandler).Methods(http.MethodGet)
-	v2student.HandleFunc("/activity/{studentId}", studentData.GetActivityHandler).Methods(http.MethodGet)
+	restrictedv2Student.HandleFunc("/behaviour/{studentId}", studentData.GetBehaviourHandler).Methods(http.MethodGet)
+	restrictedv2Student.HandleFunc("/activity/{studentId}", studentData.GetActivityHandler).Methods(http.MethodGet)
 
-	v2student.HandleFunc("/announcements/{studentId}", studentData.GetAnnouncementHandler).Methods(http.MethodGet)
+	restrictedv2Student.HandleFunc("/announcements/{studentId}", studentData.GetAnnouncementHandler).Methods(http.MethodGet)
 
-	v2student.HandleFunc("/addconcern", studentData.AddConcernHandler).Methods(http.MethodPost)
+	restrictedv2Student.HandleFunc("/addconcern", studentData.AddConcernHandler).Methods(http.MethodPost)
 
-	v2student.HandleFunc("/getacademicreports", studentData.ListAcademicReportsHandler).Methods(http.MethodGet)
-	v2student.HandleFunc("/getacademicreport/{id}", studentData.GetAcademicReportHandler).Methods(http.MethodGet)
+	restrictedv2Student.HandleFunc("/getacademicreports", studentData.ListAcademicReportsHandler).Methods(http.MethodGet)
+	restrictedv2Student.HandleFunc("/getacademicreport/{id}", studentData.GetAcademicReportHandler).Methods(http.MethodGet)
 
-	v2student.HandleFunc("/getpupilreportcards", studentData.ListOnReportCardsHandler).Methods(http.MethodPost)
-	v2student.HandleFunc("/getpupilreportcard/{id}", studentData.GetOnReportCardHandler).Methods(http.MethodGet)
-	v2student.HandleFunc("/getpupilreportcardsummarycomment/{id}", studentData.GetOnReportCardSummaryCommentHandler).Methods(http.MethodGet)
-	v2student.HandleFunc("/getpupilreportcardtarget/{id}", studentData.GetOnReportCardTargetHandler).Methods(http.MethodGet)
+	restrictedv2Student.HandleFunc("/getpupilreportcards", studentData.ListOnReportCardsHandler).Methods(http.MethodPost)
+	restrictedv2Student.HandleFunc("/getpupilreportcard/{id}", studentData.GetOnReportCardHandler).Methods(http.MethodGet)
+	restrictedv2Student.HandleFunc("/getpupilreportcardsummarycomment/{id}", studentData.GetOnReportCardSummaryCommentHandler).Methods(http.MethodGet)
+	restrictedv2Student.HandleFunc("/getpupilreportcardtarget/{id}", studentData.GetOnReportCardTargetHandler).Methods(http.MethodGet)
 
-	v2student.HandleFunc("/timetable/{studentId}", studentData.TimetableHandler).Methods(http.MethodGet)
+	restrictedv2Student.HandleFunc("/timetable/{studentId}", studentData.TimetableHandler).Methods(http.MethodGet)
 
-	v2student.HandleFunc("/rewards/{studentId}", studentData.GetRewardHandler).Methods(http.MethodGet)
-	v2student.HandleFunc("/purchase/{itemId}", studentData.GetPurchaseHandler).Methods(http.MethodPost)
+	restrictedv2Student.HandleFunc("/rewards/{studentId}", studentData.GetRewardHandler).Methods(http.MethodGet)
+	restrictedv2Student.HandleFunc("/purchase/{itemId}", studentData.GetPurchaseHandler).Methods(http.MethodPost)
 
 	return v2student
 }

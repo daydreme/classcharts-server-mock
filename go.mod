@@ -7,7 +7,10 @@ require (
 	github.com/gorilla/mux v1.8.1
 )
 
-require github.com/golang-jwt/jwt v3.2.2+incompatible // indirect
+require (
+	github.com/golang-jwt/jwt v3.2.2+incompatible // indirect
+	github.com/joho/godotenv v1.5.1 // indirect
+)
 
 require (
 	github.com/CommunityCharts/CCModels v0.0.0-20241022163332-ae89baff7db1

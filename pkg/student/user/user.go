@@ -5,6 +5,7 @@ import (
 
 	"github.com/CommunityCharts/CCModels/shared"
 	"github.com/CommunityCharts/CCModels/student"
+	db "github.com/daydreme/classcharts-server-mock/pkg"
 )
 
 type userResponseMeta struct {
@@ -16,8 +17,10 @@ const version = "20.0.1"
 
 func StudentUserHandler(w http.ResponseWriter, r *http.Request) {
 	var sessionId *string
+	s := r.Context().Value("student").(student.DBStudentUser)
 
 	if r.FormValue("include_data") != "false" {
+		sessionId = db.GetStudentJWTForLogin(s)
 	}
 
 	version := version
@@ -28,7 +31,7 @@ func StudentUserHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	data := shared.Object{
-		"user": student.NewUser(1, "Johnny Kyle", "https://placehold.co/320"),
+		"user": s.StudentUser,
 	}
 
 	response := shared.NewSuccessfulMetaResponse(data, meta)

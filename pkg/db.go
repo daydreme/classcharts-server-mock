@@ -4,8 +4,11 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/golang-jwt/jwt"
+	"os"
 	"time"
+
+	"github.com/golang-jwt/jwt"
+	"github.com/joho/godotenv"
 
 	"github.com/CommunityCharts/CCModels/school"
 	"github.com/CommunityCharts/CCModels/shared"
@@ -19,14 +22,23 @@ var DB *mongo.Database
 var Schools *mongo.Collection
 var Students *mongo.Collection
 
-var jwtSecret = []byte("secret")
-
 type Claims struct {
 	StudentID int `json:"student_id"`
 	jwt.StandardClaims
 }
 
 func InitDB() {
+	err := godotenv.Load()
+	if err != nil {
+		fmt.Println("Error loading .env file")
+	}
+
+	_, exists := os.LookupEnv("JWT_SECRET")
+
+	if !exists {
+		panic("JWT_SECRET not found in environment! Create a .env with JWT_SECRET or set it in your environment.")
+	}
+
 	fmt.Println("Connecting to MongoDB...")
 	clientOptions := options.Client().ApplyURI("mongodb://localhost:27017").SetConnectTimeout(time.Second * 3)
 	client, err := mongo.Connect(context.TODO(), clientOptions)
@@ -112,7 +124,7 @@ func UpdateStudent(student student.DBStudentUser) {
 }
 
 func GetStudentJWTForLogin(student student.DBStudentUser) *string {
-	expirationTime := time.Now().Add(3 * time.Minute)
+	expirationTime := time.Now().AddDate(0, 6, 0)
 	claims := &Claims{
 		StudentID: student.StudentUser.Id,
 		StandardClaims: jwt.StandardClaims{
@@ -121,7 +133,7 @@ func GetStudentJWTForLogin(student student.DBStudentUser) *string {
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	tokenString, err := token.SignedString(jwtSecret)
+	tokenString, err := token.SignedString([]byte(os.Getenv("JWT_SECRET")))
 	if err != nil {
 		panic(err)
 	}
