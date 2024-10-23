@@ -29,6 +29,7 @@ func main() {
 	db.InitDB()
 
 	fmt.Printf("Binding to :%v\n", PORT)
+
 	err := srv.ListenAndServe()
 	if err != nil {
 		panic(err)

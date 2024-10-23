@@ -76,7 +76,7 @@ func AuthHandler(next http.Handler) http.Handler {
 			return
 		}
 
-		// Set the student ID in the request context
+		// Set the student in the request context
 		ctx := r.Context()
 		ctx = context.WithValue(ctx, "student", db.GetStudentByID(claims.StudentID))
 

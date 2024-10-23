@@ -1,13 +1,11 @@
 package router
 
 import (
+	"github.com/CommunityCharts/CCServerMock/pkg/backend/student/data"
+	studentUser "github.com/CommunityCharts/CCServerMock/pkg/backend/student/user"
+	test2 "github.com/CommunityCharts/CCServerMock/pkg/backend/test"
+	"github.com/CommunityCharts/CCServerMock/pkg/frontend"
 	"net/http"
-
-	studentData "github.com/CommunityCharts/CCServerMock/pkg/student/data"
-	studentUser "github.com/CommunityCharts/CCServerMock/pkg/student/user"
-	"github.com/CommunityCharts/CCServerMock/pkg/test"
-
-	parentUser "github.com/CommunityCharts/CCServerMock/pkg/parent/user"
 
 	"github.com/gorilla/mux"
 )
@@ -19,6 +17,9 @@ func CreateMuxRouter() *mux.Router {
 	router := mux.NewRouter().StrictSlash(true)
 	router.Use(ErrorHandler)
 	router.Use(RequestHandler)
+
+	router.PathPrefix("/public").Handler(http.StripPrefix("/public/", http.FileServer(http.Dir(frontend.Dir("public")))))
+	DoFrontendStuff(router)
 
 	CreateStudentRoutes(router.PathPrefix("/apiv2student").Subrouter(), true)
 	CreateStudentV1Routes(router.PathPrefix("/student").Subrouter())
@@ -43,36 +44,33 @@ func CreateStudentRoutes(v2student *mux.Router, includeExtras bool) *mux.Router 
 		v2student.HandleFunc("/logout", studentUser.LogoutHandler).Methods(http.MethodPost)
 	}
 
-	restrictedv2Student.HandleFunc("/behaviour/{studentId}", studentData.GetBehaviourHandler).Methods(http.MethodGet)
-	restrictedv2Student.HandleFunc("/activity/{studentId}", studentData.GetActivityHandler).Methods(http.MethodGet)
+	restrictedv2Student.HandleFunc("/behaviour/{studentId}", data.GetBehaviourHandler).Methods(http.MethodGet)
+	restrictedv2Student.HandleFunc("/activity/{studentId}", data.GetActivityHandler).Methods(http.MethodGet)
 
-	restrictedv2Student.HandleFunc("/announcements/{studentId}", studentData.GetAnnouncementsHandler).Methods(http.MethodGet)
+	restrictedv2Student.HandleFunc("/announcements/{studentId}", data.GetAnnouncementsHandler).Methods(http.MethodGet)
 
-	restrictedv2Student.HandleFunc("/addconcern", studentData.AddConcernHandler).Methods(http.MethodPost)
+	restrictedv2Student.HandleFunc("/addconcern", data.AddConcernHandler).Methods(http.MethodPost)
 
-	restrictedv2Student.HandleFunc("/getacademicreports", studentData.ListAcademicReportsHandler).Methods(http.MethodGet)
-	restrictedv2Student.HandleFunc("/getacademicreport/{id}", studentData.GetAcademicReportHandler).Methods(http.MethodGet)
+	restrictedv2Student.HandleFunc("/getacademicreports", data.ListAcademicReportsHandler).Methods(http.MethodGet)
+	restrictedv2Student.HandleFunc("/getacademicreport/{id}", data.GetAcademicReportHandler).Methods(http.MethodGet)
 
-	restrictedv2Student.HandleFunc("/getpupilreportcards", studentData.ListOnReportCardsHandler).Methods(http.MethodPost)
-	restrictedv2Student.HandleFunc("/getpupilreportcard/{id}", studentData.GetOnReportCardHandler).Methods(http.MethodGet)
-	restrictedv2Student.HandleFunc("/getpupilreportcardsummarycomment/{id}", studentData.GetOnReportCardSummaryCommentHandler).Methods(http.MethodGet)
-	restrictedv2Student.HandleFunc("/getpupilreportcardtarget/{id}", studentData.GetOnReportCardTargetHandler).Methods(http.MethodGet)
+	restrictedv2Student.HandleFunc("/getpupilreportcards", data.ListOnReportCardsHandler).Methods(http.MethodPost)
+	restrictedv2Student.HandleFunc("/getpupilreportcard/{id}", data.GetOnReportCardHandler).Methods(http.MethodGet)
+	restrictedv2Student.HandleFunc("/getpupilreportcardsummarycomment/{id}", data.GetOnReportCardSummaryCommentHandler).Methods(http.MethodGet)
+	restrictedv2Student.HandleFunc("/getpupilreportcardtarget/{id}", data.GetOnReportCardTargetHandler).Methods(http.MethodGet)
 
-	restrictedv2Student.HandleFunc("/timetable/{studentId}", studentData.TimetableHandler).Methods(http.MethodGet)
-
-	restrictedv2Student.HandleFunc("/rewards/{studentId}", studentData.GetRewardHandler).Methods(http.MethodGet)
-	restrictedv2Student.HandleFunc("/purchase/{itemId}", studentData.GetPurchaseHandler).Methods(http.MethodPost)
+	restrictedv2Student.HandleFunc("/timetable/{studentId}", data.TimetableHandler).Methods(http.MethodGet)
 
 	return v2student
 }
 
 func CreateParentRoutes(v2parent *mux.Router) *mux.Router {
-	v2parent.HandleFunc("/login", parentUser.LoginHandler).Methods(http.MethodPost)
-	v2parent.HandleFunc("/ping", parentUser.ParentUserHandler).Methods(http.MethodPost)
-	v2parent.HandleFunc("/logout", parentUser.LogoutHandler).Methods(http.MethodPost)
-
-	v2parent.HandleFunc("/pupils", parentUser.GetPupilsHandler).Methods(http.MethodGet)
-	v2parent.HandleFunc("/announcements", studentData.GetAnnouncementsHandler).Methods(http.MethodGet)
+	//v2parent.HandleFunc("/login", user2.LoginHandler).Methods(http.MethodPost)
+	//v2parent.HandleFunc("/ping", user2.ParentUserHandler).Methods(http.MethodPost)
+	//v2parent.HandleFunc("/logout", user2.LogoutHandler).Methods(http.MethodPost)
+	//
+	//v2parent.HandleFunc("/pupils", user2.GetPupilsHandler).Methods(http.MethodGet)
+	//v2parent.HandleFunc("/announcements", data.GetAnnouncementsHandler).Methods(http.MethodGet)
 
 	CreateStudentRoutes(v2parent, false) // Creates all the /apiv2parent/behaviour, /apiv2parent/activity, etc. routes
 
@@ -94,12 +92,19 @@ func CreateTestRouter(router *mux.Router) *mux.Router {
 	restrictedTest := router.PathPrefix("").Subrouter()
 	restrictedTest.Use(AuthHandler)
 
-	router.HandleFunc("/newstudent", test.CreateStudentHandler).Methods(http.MethodPost)
-	router.HandleFunc("/getstudent", test.GetStudentHandler).Methods(http.MethodGet)
+	router.HandleFunc("/newstudent", test2.CreateStudentHandler).Methods(http.MethodPost)
+	router.HandleFunc("/getstudent", test2.GetStudentHandler).Methods(http.MethodGet)
 
-	router.HandleFunc("/newschool", test.CreateSchoolHandler).Methods(http.MethodPost)
+	router.HandleFunc("/newschool", test2.CreateSchoolHandler).Methods(http.MethodPost)
 
-	restrictedTest.HandleFunc("/newannouncement", studentData.CreateAnnouncementHandler).Methods(http.MethodPost)
+	restrictedTest.HandleFunc("/newannouncement", data.CreateAnnouncementHandler).Methods(http.MethodPost)
+
+	restrictedTest.HandleFunc("/newactivity", data.CreateActivityHandler).Methods(http.MethodPost)
 
 	return router
+}
+
+func DoFrontendStuff(router *mux.Router) {
+	router.HandleFunc("/", frontend.HomePageHandler).Methods(http.MethodGet)
+	router.HandleFunc("/announcements", frontend.AnnouncementsPageHandler).Methods(http.MethodGet)
 }

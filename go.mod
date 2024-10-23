@@ -9,11 +9,12 @@ require (
 
 require (
 	github.com/golang-jwt/jwt v3.2.2+incompatible // indirect
+	github.com/google/uuid v1.6.0 // indirect
 	github.com/joho/godotenv v1.5.1 // indirect
 )
 
 require (
-	github.com/CommunityCharts/CCModels v0.0.0-20241022163332-ae89baff7db1
+	github.com/CommunityCharts/CCModels v0.0.0-20241022205825-4c913d3c76ac
 	github.com/felixge/httpsnoop v1.0.4 // indirect
 	github.com/golang/snappy v0.0.4 // indirect
 	github.com/klauspost/compress v1.17.11 // indirect

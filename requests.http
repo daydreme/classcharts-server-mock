@@ -58,6 +58,15 @@ name=Faran Hight Primary&logo=https://google2.com&schoolId=1238
 POST http://localhost:4000/test/newannouncement
 Accept: application/json
 Content-Type: application/x-www-form-urlencoded
-Authorization: Basic eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdHVkZW50X2lkIjoxLCJleHAiOjE3NDUzNTQ3MDJ9.mMmlqEroV-KJlgDyMTzGqIOOj2hWywX8w9I9O2my5nA 
+Authorization: Basic eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdHVkZW50X2lkIjoxLCJleHAiOjE3NDUzNzExNDl9.b4QhlRGitvMiTohcq1qWqlAO31wiWRVaXB3wUDM3A-U
 
 title=Welcome Back, Year 10!&content=Welcome back to school, Year 10!&teacher=Mr T Pott
+
+### Create New Activity as logged in user
+### Create a new announcement in the school of the logged in user.
+POST http://localhost:4000/test/newactivity
+Accept: application/json
+Content-Type: application/x-www-form-urlencoded
+Authorization: Basic eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdHVkZW50X2lkIjoxLCJleHAiOjE3NDUzNzExNDl9.b4QhlRGitvMiTohcq1qWqlAO31wiWRVaXB3wUDM3A-U
+
+type=behaviour&polarity=positive&score=2&reason=Outstanding Work&lesson_name=10C/Sc1&teacher_name=Miss T Aritus&room_name=S1

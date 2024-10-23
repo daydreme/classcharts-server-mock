@@ -4,16 +4,14 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"os"
-	"time"
-
 	"github.com/golang-jwt/jwt"
 	"github.com/joho/godotenv"
+	"os"
+	"time"
 
 	"github.com/CommunityCharts/CCModels/school"
 	"github.com/CommunityCharts/CCModels/shared"
 	"github.com/CommunityCharts/CCModels/student"
-	"github.com/CommunityCharts/CCServerMock/pkg/util"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -163,45 +161,13 @@ func CreateSchool(school school.School) {
 	}
 }
 
-/*
-===STUDENT DATA CREATION===
-*/
-func MakeAnnouncement(school school.School, title, content, teacher string, sticky shared.YesNoBool, attachments ...shared.AnnouncementAttachment) {
-	ran, _ := util.RandomInt(100000, 999999)
-	// Create an announcement
-	announcement := shared.Announcement{
-		Id:          ran,
-		Title:       title,
-		Description: content,
-
-		SchoolName:  school.Name,
-		SchoolLogo:  school.Logo,
-		TeacherName: teacher,
-
-		Sticky: sticky,
-		State:  "new",
-
-		Timestamp: time.Now().Format(time.RFC3339),
-
-		Attachments: attachments,
-
-		CommentVisibility: "none",
-
-		AllowComments:    shared.No,
-		AllowReactions:   shared.No,
-		AllowConsent:     shared.No,
-		PriorityPinned:   shared.No,
-		RequiresConsent:  shared.No,
-		CanChangeConsent: false,
-	}
-
-	// find school in db and update announcements array
+func UpdateSchool(school school.School) {
 	filter := shared.Object{
 		"id": school.Id,
 	}
-	Schools.FindOneAndUpdate(context.TODO(), filter, shared.Object{
-		"$push": shared.Object{
-			"announcements": announcement,
-		},
-	})
+
+	_, err := Schools.ReplaceOne(context.TODO(), filter, school)
+	if err != nil {
+		panic(err)
+	}
 }

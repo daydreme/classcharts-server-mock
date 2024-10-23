@@ -1,0 +1,35 @@
+<head>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Symbols+Rounded" rel="stylesheet">
+
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <script type="importmap">
+        {
+          "imports": {
+            "@material/web/": "https://esm.run/@material/web/"
+          }
+        }
+    </script>
+    <script type="module">
+        import '@material/web/all.js';
+        import {styles as typescaleStyles} from '@material/web/typography/md-typescale-styles.js';
+
+        document.adoptedStyleSheets.push(typescaleStyles.styleSheet);
+    </script>
+
+    <script src="/public/stuff.js" defer></script>
+
+    <title>Testing Frontend</title>
+
+    <p class="md-typescale-headline-small">
+        Currently logged in as: <span class="md-typescale-display-medium" id="userName"></span>
+        <br>
+        <span class="md-typescale-headline-small" sid></span>
+    </p>
+
+    <style>
+        :root {
+            --md-icon-font: 'Material Symbols Rounded';
+        }
+    </style>
+</head>
